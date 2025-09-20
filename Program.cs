@@ -1,5 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
+//connection string to the database
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 
