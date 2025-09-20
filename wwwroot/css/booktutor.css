@@ -1,0 +1,395 @@
+/* BookTutor Page Styles */
+
+/* Typography - Matching BCConnect/Moodle styling */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+}
+
+@media (min-width: 768px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Terms and Conditions Section */
+.tcTextSection {
+  border: none;
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  border-radius: 15px;
+}
+
+.tcTextSection .card-header {
+  background: white;
+  color: black;
+  border-radius: 15px 15px 0 0 !important;
+  border: none;
+}
+
+.tcHeading {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  border-bottom: 3px solid #b41b61;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+/* Booking Form Section */
+.bookingFormSection {
+  border: none;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  border-radius: 15px;
+}
+
+.bookingFormSection .card-header {
+  background: white;
+  color: black;
+  border-radius: 15px 15px 0 0 !important;
+  border: none;
+}
+
+.bookingFormHeading {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #2c3e50;
+  border-bottom: 3px solid #b41b61;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+/* Main Container and Layout */
+.mainContainer {
+  margin-top: 1.5rem;
+}
+
+.headingSection {
+  margin-bottom: 3rem;
+}
+
+.fullWidthColumn {
+  width: 100%;
+}
+
+.mainHeading {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.tcSection {
+  margin-bottom: 1.5rem;
+}
+
+.bookingFormContainer {
+  margin-bottom: 3rem;
+}
+
+/* Form Layout */
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.formFieldHalf {
+  flex: 0 0 50%;
+  padding-right: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  .formFieldHalf {
+    flex: 0 0 100%;
+    padding-right: 0;
+  }
+}
+
+.fieldLabel {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #2c3e50;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: #f1f3f4;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.inputField:focus {
+  background-color: #e8eaed;
+  outline: 0;
+}
+
+.selectField {
+  width: 100%;
+  padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: #f1f3f4;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.selectField:focus {
+  background-color: #e8eaed;
+  outline: 0;
+}
+
+.notesFieldContainer {
+  margin-bottom: 1rem;
+}
+
+.termsAgreementContainer {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.375rem;
+}
+
+.termsAgreementLabel {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 0;
+}
+
+.termsCheckbox {
+  margin-right: 0.75rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+}
+
+.textareaField {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: #f1f3f4;
+  resize: vertical;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.textareaField:focus {
+  background-color: #e8eaed;
+  outline: 0;
+}
+
+.submitButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.submitButton {
+    background: #4ac1c1;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+  background: #3aa3a3;
+}
+
+/* File Upload Styles */
+.fileUploadContainer {
+  margin-bottom: 1rem;
+}
+
+.fileUploadWrapper {
+  position: relative;
+  border: 2px dashed #ccc;
+  border-radius: 0.375rem;
+  background-color: #f1f3f4;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.fileUploadWrapper:hover {
+  border-color: #4ac1c1;
+  background-color: #e8eaed;
+}
+
+.fileInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.fileUploadDisplay {
+  padding: 2rem 1rem;
+  text-align: center;
+  pointer-events: none;
+}
+
+.fileUploadText {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.fileUploadHint {
+  display: block;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.selectedFilesContainer {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  border: 1px solid #e9ecef;
+}
+
+.selectedFilesTitle {
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.selectedFilesList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.selectedFileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+  background-color: white;
+  border-radius: 0.25rem;
+  border: 1px solid #dee2e6;
+}
+
+.selectedFileItem:last-child {
+  margin-bottom: 0;
+}
+
+.fileName {
+  font-weight: 500;
+  color: #333;
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.fileSize {
+  font-size: 0.875rem;
+  color: #666;
+  margin-right: 0.5rem;
+}
+
+.removeFileBtn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.removeFileBtn:hover {
+  background: #c82333;
+}
+
+/* Form Validation Styles */
+.field-error {
+  border-bottom: 3px solid #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+.field-success {
+  border-bottom: 3px solid #28a745 !important;
+  background-color: #f8fff8 !important;
+}
+
+.field-error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.field-success-message {
+  color: #28a745;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+.terms-error {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5 !important;
+}
+
+.terms-success {
+  border: 2px solid #28a745 !important;
+  background-color: #f8fff8 !important;
+}
+
+.terms-error-message {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.terms-success-message {
+  color: #28a745;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+.form-error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 0.75rem 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  text-align: center;
+}

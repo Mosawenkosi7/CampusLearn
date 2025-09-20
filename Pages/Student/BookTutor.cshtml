@@ -1,4 +1,141 @@
 ﻿@page
 @model CampusLearn.Pages.Student.BookTutorModel
 @{
+    ViewData["Title"] = "Book Tutor";
 }
+<div class="mainContainer">
+    <!-- Book a Session Heading -->
+    <div class="headingSection">
+        <div class="fullWidthColumn">
+            <h1 class="mainHeading">Book a Session</h1>
+        </div>
+    </div>
+
+    <!-- T&C Section -->
+    <div class="tcSection">
+        <div class="fullWidthColumn">
+            <div class="card tcTextSection">
+                <div class="card-header">
+                    <h3 class="tcHeading">Terms and Conditions for booking a tutor</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li>All appointments with tutors must be scheduled a day ahead. We cannot organise a tutor for you at short notice.</li>
+                        <li>All sessions are limited to 1 hour.</li>
+                        <li>You must come prepared for the sessions.</li>
+                        <li>You will be given some exercises to do in your sessions.</li>
+                        <li>All online sessions via MS Teams are recorded.</li>
+                        <li>All face-to-face sessions are held at the study room.</li>
+                        <li>Respect the time and effort of your tutor.</li>
+                        <li>You will be required to complete a tutor evaluation form.</li>
+                    </ul>
+                    <p class="card-text">
+                        For any inquires, email: tutors@belgiumcampus.ac.za
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Form Section -->
+    <div class="bookingFormContainer">
+        <div class="fullWidthColumn">
+            <div class="card bookingFormSection">
+                <div class="card-header">
+                    <h3 class="bookingFormHeading">Booking Form</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="formRow">
+                            <div class="formFieldHalf">
+                                <label for="studentName" class="fieldLabel">Student Name</label>
+                                <input type="text" class="inputField" id="studentName" name="studentName" required>
+                            </div>
+                            <div class="formFieldHalf">
+                                <label for="studentEmail" class="fieldLabel">Email Address</label>
+                                <input type="email" class="inputField" id="studentEmail" name="studentEmail" required>
+                            </div>
+                        </div>
+                        
+                        <div class="formRow">
+                            <div class="formFieldHalf">
+                                <label for="subject" class="fieldLabel">Subject</label>
+                                <select class="selectField" id="subject" name="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="computer-science">Computer Science</option>
+                                </select>
+                            </div>
+                            <div class="formFieldHalf">
+                                <label for="preferredDate" class="fieldLabel">Preferred Date</label>
+                                <input type="date" class="inputField" id="preferredDate" name="preferredDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="formRow">
+                            <div class="formFieldHalf">
+                                <label for="preferredTime" class="fieldLabel">Preferred Time</label>
+                                <select class="selectField" id="preferredTime" name="preferredTime" required>
+                                    <option value="">Select time</option>
+                                    <option value="09:00">9:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="12:00">12:00 PM</option>
+                                    <option value="13:00">1:00 PM</option>
+                                    <option value="14:00">2:00 PM</option>
+                                    <option value="15:00">3:00 PM</option>
+                                    <option value="16:00">4:00 PM</option>
+                                    <option value="17:00">5:00 PM</option>
+                                </select>
+                            </div>
+                            <div class="formFieldHalf">
+                                <label for="sessionDuration" class="fieldLabel">Session Duration</label>
+                                <select class="selectField" id="sessionDuration" name="sessionDuration" required>
+                                    <option value="">Select duration</option>
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="45">45 minutes</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="notesFieldContainer">
+                            <label for="additionalNotes" class="fieldLabel">Additional Notes</label>
+                            <textarea class="textareaField" id="additionalNotes" name="additionalNotes" rows="4" placeholder="Please provide any additional information about your tutoring needs..."></textarea>
+                        </div>
+                        
+                        <div class="fileUploadContainer">
+                            <label for="studentResources" class="fieldLabel">Upload Resources</label>
+                            <div class="fileUploadWrapper">
+                                <input type="file" class="fileInput" id="studentResources" name="studentResources" multiple accept=".pdf,.ppt,.pptx,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif">
+                                <div class="fileUploadDisplay">
+                                    <span class="fileUploadText">Click to select files or drag and drop</span>
+                                    <span class="fileUploadHint">Supported formats: PDF, PowerPoint, Word, Images, Text files</span>
+                                </div>
+                            </div>
+                            <div class="selectedFilesContainer" id="selectedFilesContainer" style="display: none;">
+                                <h6 class="selectedFilesTitle">Selected Files:</h6>
+                                <ul class="selectedFilesList" id="selectedFilesList"></ul>
+                            </div>
+                        </div>
+                        
+                        <div class="termsAgreementContainer">
+                            <label class="termsAgreementLabel">
+                                <input type="checkbox" class="termsCheckbox" id="agreeTerms" name="agreeTerms" required>
+                                I agree with the terms and conditions
+                            </label>
+                        </div>
+                        
+                        <div class="submitButtonContainer">
+                            <button type="submit" class="submitButton">Book Session</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/booktutor.js" asp-append-version="true"></script>
+}
+
