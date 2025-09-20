@@ -1,3 +1,5 @@
+using CampusLearn.Repositories;
+using CampusLearn.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -5,16 +7,19 @@ namespace CampusLearn.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        private readonly TutorService _tutorService;
+        public IndexModel(TutorService tutorService)
         {
-            _logger = logger;
+            _tutorService = tutorService;
         }
 
+
+        //list to hold the top tutors and display on the homepage
+        public List<TutorCard> TopTutors { get; set; } = new List<TutorCard>();
         public void OnGet()
         {
-
+            //get the top tutors from the service
+            TopTutors = _tutorService.GetTopTutors();
         }
     }
 }

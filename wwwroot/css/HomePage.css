@@ -1,4 +1,4 @@
-﻿body {
+body {
 }
 
 
@@ -22,11 +22,11 @@
 
 .quotes {
     margin-top: 35px;
-    background-color: #B41B61;
+    background-color: #EBEBEB;
     height: 100px;
     padding: 20px;
     font-style: italic;
-    color: white;
+    color: black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -71,7 +71,7 @@
 }
 
 .getToKnow p {
-    width: 80%;
+/*    width: 80%;*/
     font-size: 1.1rem;
 }
 
@@ -80,25 +80,31 @@
     display: flex;
     margin-bottom:20px;
 /*    background-color: green;*/
-/*    justify-content: center;*/
-    gap: 50px;
+    justify-content: center;
+    gap: 30px;
 }
 
-.top-tutors div {
-    width: 350px;
-    height: 350px;
-    background-color: rebeccapurple;
-}
+    .top-tutors .tutor-card {
+        width: 350px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #F0F0F0;
+    }
 
-.course{
-    font-weight:bold;
+.img-frame-tutor {
+    width: 200px;
+    height: 200px;
+    background-color: red;
+}
+.course {
+    font-weight: bold;
 }
 
 .student-review {
     height: 420px;
     background-color: #D6D6D6;
     padding: 20px;
-    margin: 80px 0 ;
+    margin-top: 80px;
 }
 
 .review {
@@ -111,3 +117,8 @@
     padding: 25px;
 }
 
+.img-frame-tutor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

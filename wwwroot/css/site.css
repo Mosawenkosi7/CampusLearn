@@ -42,6 +42,13 @@ body {
   text-decoration: none;
 }
 
+.img-frame-tutor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
 footer {
     display: flex;
     background-color: #0E0C0C;

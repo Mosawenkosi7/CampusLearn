@@ -5,7 +5,7 @@
 }
 
 @* homePage Styles *@
-<link rel="stylesheet" href="~/css/HomePage.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/Homepage.css" asp-append-version="true" />
 
 <div class="container">
     <div class="row heading-section">
@@ -85,23 +85,32 @@
      </div>
 
      <div class="row getToKnow p-0">
-        <h2 class="p-0 mb-3">Get To Know Your Tutors</h2>
-        <p class="p-0">
+        <h2 class="p-0 mb-3 text-center">Get To Know Your Tutors</h2>
+        <p class="p-0 text-center">
             Browse through our featured tutors and find the right support for your courses.
             Each tutor is here to help you excel in your <span class="course">BCom, BIT, and Diploma modules</span>
         </p>
-        <div class="top-tutors">
-            <div></div>
-            <div></div>
-            <div></div>
+        <div class="top-tutors mt-4">
+            @foreach (var item in Model.TopTutors)
+            {
+                <div class="tutor-card p-3">
+                    <div class="img-frame-tutor mb-3">
+                       <img src="/Media/tutors/@item.ProfilePicture"/>
+                    </div>
+                    <h4 class="me-3">@item.FullName <i class="bi bi-patch-check-fill" style="color:blue"></i></h4>
+                    <p>@item.Program</p>
+                    <p>@item.YearsOfStudy year</p>
+                </div>
+
+            }
         </div>
 
-        <div class="p-0">
+        <div class="p-0 mb-4" style="text-align:center">
             <button class="btn btn-primary">Meet All Tutors</button>
         </div>
      </div>
 
-    <div class="student-review w-100">
+    <div class="student-review w-100 mb-4">
         <h2 class="text-center mb-4" >See what students are saying</h2>
 
         <div id="carouselExampleControlsNoTouching" class="carousel slide " data-bs-touch="false">
