@@ -1,0 +1,124 @@
+body {
+}
+
+
+.heading-section {
+/*        background-color: palegoldenrod;*/
+/*    margin-bottom: 10px !important;*/
+/*    border-bottom: 3px solid black;*/
+/*    padding-bottom: 35px;*/
+}
+
+
+.heading-section h1 {
+    font-size: 2.7rem;
+}
+
+.heading-section p {
+    font-size: 1.1rem;
+    margin-top: 30px!important;
+/*    color: #555;*/
+}
+
+.quotes {
+    margin-top: 35px;
+    background-color: #EBEBEB;
+    height: 100px;
+    padding: 20px;
+    font-style: italic;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+.quotes h5{
+    font-size: 1.5rem;
+/*    color: red;*/
+}
+.benefits-section {
+    margin-top: 85px!important;
+}
+.benefits-section p {
+    font-size: 1.1rem;
+}
+
+/* Fix icon alignment in benefits section */
+.benefits-section .benefit-item {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; /* Align to top instead of center */
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.benefits-section .benefit-icon {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0; /* Prevent icon from shrinking */
+    margin-top: 5px; /* Slight adjustment for better visual alignment */
+}
+
+.benefits-section .benefit-text {
+    flex: 1; /* Take remaining space */
+    margin: 0; /* Remove default margins */
+}
+
+.getToKnow {
+    margin-top: 65px;
+/*    background-color: orange;*/
+    padding:0;
+}
+
+.getToKnow p {
+/*    width: 80%;*/
+    font-size: 1.1rem;
+}
+
+.top-tutors {
+    padding:0;
+    display: flex;
+    margin-bottom:20px;
+/*    background-color: green;*/
+    justify-content: center;
+    gap: 30px;
+}
+
+    .top-tutors .tutor-card {
+        width: 350px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        background-color: #F0F0F0;
+    }
+
+.img-frame-tutor {
+    width: 200px;
+    height: 200px;
+    background-color: red;
+}
+.course {
+    font-weight: bold;
+}
+
+.student-review {
+    height: 420px;
+    background-color: #D6D6D6;
+    padding: 20px;
+    margin-top: 80px;
+}
+
+.review {
+    background-color: white;
+    height: 300px;
+    width: 900px !important;
+    margin: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+}
+
+.img-frame-tutor img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

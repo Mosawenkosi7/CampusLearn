@@ -4,7 +4,200 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@* homePage Styles *@
+<link rel="stylesheet" href="~/css/Homepage.css" asp-append-version="true" />
+
+<div class="container">
+    <div class="row heading-section">
+        <div class="col-6 pt-5">
+            <h1>Transform Your Learning Experience with CampusLearn™</h1>
+            <p class="mt-3">
+                Get instant academic support from qualified peer tutors, 24/7 AI assistance,
+                and a collaborative learning community—all designed specifically for Belgium
+                Campus students.
+            </p>
+
+            <button class="btn btn-primary mt-4">Find A Tutor</button>
+        </div>
+        <div class="col-6" style="display:block; overflow:hidden; background-color:black;padding:0">
+            <img src="/Media/webimages/tutoring.jpg" style="width:100%" />
+        </div>
+         <div class="quotes">
+             <h5 class="text-center" id="quoteDisplay">
+                 Education is the most powerful weapon which you can use to change the world. – Nelson Mandela
+             </h5>
+         </div>
+
+    </div>
+
+    <div class="row mt-5 benefits-section">
+        <h2 class="text-center mb-5">Everything You Get with CampusLearn™</h2>
+        <div class="benefit-item">
+            <div class="benefit-icon">
+                <img src="/Media/icons/approved.png" style="width:100%; height:100%" />
+            </div>
+            <p class="benefit-text">
+                Connect with peer tutors who know your BCom, BIT, and Diploma modules inside out.
+                Get one-on-one support, clarify tough concepts, and prepare with confidence for exams and
+                assignments.
+            </p>
+        </div>
+
+        <div class="benefit-item">
+            <div class="benefit-icon">
+                <img src="/Media/icons/chatai.png" style="width:100%; height:100%" />
+            </div>
+            <p class="benefit-text">
+                Our intelligent chatbot gives instant answers to common academic questions.
+                It's like having a study buddy who's always available.
+            </p>
+        </div>
+
+        <div class="benefit-item">
+            <div class="benefit-icon">
+                <img src="/Media/icons/Book.png" style="width:100%; height:100%" />
+            </div>
+            <p class="benefit-text">
+                Access tutor-uploaded videos, PDFs, and interactive materials designed to match your coursework.
+                Learn at your own pace with high-quality study materials.
+            </p>
+        </div>
+
+        <div class="benefit-item">
+            <div class="benefit-icon">
+                <img src="/Media/icons/forum.png" style="width:100%; height:100%" />
+            </div>
+            <p class="benefit-text">
+                Join our moderated forum for anonymous academic discussions.
+                Share ideas, ask questions, and collaborate without pressure or judgment.
+            </p>
+        </div>
+
+        <div class="benefit-item">
+            <div class="benefit-icon">
+                <img src="/Media/icons/globe.png" style="width:100%; height:100%" />
+            </div>
+            <p class="benefit-text">
+                Whether at home, on campus, or on the go, CampusLearn™ is with you 24/7.
+                Study support is available whenever and wherever you need it.
+            </p>
+        </div>
+     </div>
+
+     <div class="row getToKnow p-0">
+        <h2 class="p-0 mb-3 text-center">Get To Know Your Tutors</h2>
+        <p class="p-0 text-center">
+            Browse through our featured tutors and find the right support for your courses.
+            Each tutor is here to help you excel in your <span class="course">BCom, BIT, and Diploma modules</span>
+        </p>
+        <div class="top-tutors mt-4">
+            @foreach (var item in Model.TopTutors)
+            {
+                <div class="tutor-card p-3">
+                    <div class="img-frame-tutor mb-3">
+                       <img src="/Media/tutors/@item.ProfilePicture"/>
+                    </div>
+                    <h4 class="me-3">@item.FullName <i class="bi bi-patch-check-fill" style="color:blue"></i></h4>
+                    <p>@item.Program</p>
+                    <p>@item.YearsOfStudy year</p>
+                </div>
+
+            }
+        </div>
+
+        <div class="p-0 mb-4" style="text-align:center">
+            <button class="btn btn-primary">Meet All Tutors</button>
+        </div>
+     </div>
+
+    <div class="student-review w-100 mb-4">
+        <h2 class="text-center mb-4" >See what students are saying</h2>
+
+        <div id="carouselExampleControlsNoTouching" class="carousel slide " data-bs-touch="false">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="d-block w-100 review">
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <h6 class="mt-2">James Smith ~ Linear Programming 181</h6>
+                        <p class="mt-3">I really struggled to understand Linear Programming at first, but with the help I received, everything became so much clearer. 
+                            The step-by-step explanations and examples made it easy to apply the concepts, and now I feel much more confident in solving LPR problems.
+                        </p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="d-block w-100 review">
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-half" style="color: #FFD700; font-size:20px;"></i>
+                        <h6 class="mt-2">Mbali Baloi ~ Forum</h6>
+                        <p>The forum has been a game changer for me. Whenever I was stuck, I could post my questions and get clear, helpful answers from peers and tutors. 
+                            Not only did I improve my understanding of the subjects, but I also gained confidence in tackling problems on my own. I’m really grateful for this 
+                            platform—it makes learning so much easier.
+                        </p>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="d-block w-100 review">
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <i class="bi bi-star-fill" style="color: #FFD700; font-size:20px;"></i>
+                        <h6 class="mt-2">Chris Aphane ~ Learning Resources</h6>
+                        <p>
+                            I really enjoy the learning resources shared by the tutors. They’re engaging, easy to follow, and always connect well with what we’re covering in class. 
+                            The best part is that I was able to message the tutor directly to ask questions and get a follow-up on the resource they posted. It feels like getting extra 
+                            guidance outside of lessons, and the quick responses make studying much more effective. 
+                            Having this kind of support keeps me motivated and makes learning much more enjoyable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControlsNoTouching" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+ </div>
+
+
+
+
+<script>
+        const quotes = [
+        "The expert in anything was once a beginner. – Helen Hayes",
+        "Success is not about being the best. It's about being better than you were yesterday. – Unknown",
+        "Education is not preparation for life; education is life itself. – John Dewey",
+        "The only way to do great work is to love what you do. – Steve Jobs",
+        "Learning never exhausts the mind. – Leonardo da Vinci",
+        "Your limitation—it's only your imagination. Push yourself, because no one else is going to do it for you. – Unknown",
+        "The future belongs to those who learn more skills and combine them in creative ways. – Robert Greene",
+        "Don't let what you cannot do interfere with what you can do. – John Wooden",
+        "The beautiful thing about learning is that no one can take it away from you. – B.B. King",
+        "Success is the sum of small efforts repeated day in and day out. – Robert Collier",
+        "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice. – Brian Herbert",
+        "IT'S HOW WE ARE WIRED ~ Belgium Campus"
+    ];
+
+    let currentQuoteIndex = 0;
+    const quoteDisplay = document.getElementById('quoteDisplay');
+
+    function showNextQuote() {
+        currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+        quoteDisplay.textContent = quotes[currentQuoteIndex];
+    }
+
+    // Change quote every 3.5 seconds
+    setInterval(showNextQuote, 5500);
+</script>
