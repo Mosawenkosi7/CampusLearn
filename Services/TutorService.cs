@@ -18,5 +18,20 @@ namespace CampusLearn.Services
             tutors = tutors.Where(tutor => tutor.AverageGrade >= 75).ToList();
             return tutors;
         }
+
+        public TutorCard? GetTutorProfile(int tutorId)
+        {
+            return _tutorRepository.GetTutorProfile(tutorId);
+        }
+
+        public List<TutorAvailability> GetTutorAvailability(int tutorId)
+        {
+            return _tutorRepository.GetTutorAvailability(tutorId);
+        }
+
+        public bool BookAvailability(int availabilityId)
+        {
+            return _tutorRepository.BookAvailability(availabilityId);
+        }
     }
 }
