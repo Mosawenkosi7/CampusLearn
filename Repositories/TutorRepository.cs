@@ -102,44 +102,54 @@ namespace CampusLearn.Repositories
         {
             var availabilities = new List<TutorAvailability>();
 
-            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            try
             {
-                connectDB.Open();
-
-                string query = @"
-                    SELECT ta.tutorAvailabilityId, m.moduleName, ta.available,
-                           CASE WHEN b.bookingId IS NOT NULL THEN 1 ELSE 0 END as isBooked
-                    FROM tutorAvailability ta
-                    INNER JOIN modules m ON ta.moduleCode = m.moduleCode
-                    LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId
-                    WHERE ta.tutorId = @tutorId AND ta.available >= GETDATE()
-                    ORDER BY ta.available";
-
-                using (SqlCommand command = new SqlCommand(query, connectDB))
+                using (SqlConnection connectDB = new SqlConnection(_connectionString))
                 {
-                    command.Parameters.AddWithValue("@tutorId", tutorId);
-                    
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    connectDB.Open();
+
+                    string query = @"
+                        SELECT ta.tutorAvailabilityId, ta.moduleCode, ta.available,
+                               CASE WHEN b.bookingId IS NOT NULL THEN 1 ELSE 0 END as isBooked
+                        FROM tutorAvailability ta
+                        LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId
+                        WHERE ta.tutorId = @tutorId AND ta.available >= GETDATE()
+                        ORDER BY ta.available ASC";
+
+                    using (SqlCommand command = new SqlCommand(query, connectDB))
                     {
-                        while (reader.Read())
+                        command.Parameters.AddWithValue("@tutorId", tutorId);
+                        
+                        using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            var availableDateTime = reader.GetDateTime(2);
-                            availabilities.Add(new TutorAvailability
+                            while (reader.Read())
                             {
-                                AvailabilityId = reader.GetInt32(0),
-                                Module = reader.GetString(1),
-                                AvailableDate = availableDateTime.Date,
-                                StartTime = availableDateTime.TimeOfDay,
-                                EndTime = availableDateTime.AddHours(1).TimeOfDay, // Assuming 1-hour sessions
-                                IsBooked = reader.GetBoolean(3)
-                            });
+                                var availableDateTime = reader.GetDateTime(2);
+                                var availability = new TutorAvailability
+                                {
+                                    AvailabilityId = reader.GetInt32(0),
+                                    Module = reader.GetString(1), // Using moduleCode directly
+                                    AvailableDate = availableDateTime.Date,
+                                    StartTime = availableDateTime.TimeOfDay,
+                                    EndTime = availableDateTime.AddHours(1).TimeOfDay, // Assuming 1-hour sessions
+                                    IsBooked = reader.GetBoolean(3)
+                                };
+                                availabilities.Add(availability);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                // Log error for debugging but don't crash the application
+                Console.WriteLine($"Error getting tutor availability: {ex.Message}");
+            }
 
             return availabilities;
         }
+
+
 
         //method to book availability
         public bool BookAvailability(int availabilityId, string studentNumber = "ST12345678")

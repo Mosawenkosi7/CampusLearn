@@ -14,7 +14,7 @@ namespace CampusLearn.Pages.Tutor
             _tutorService = tutorService;
         }
 
-        public TutorProfile? TutorProfile { get; set; }
+        public TutorCard? TutorProfile { get; set; }
         public List<CampusLearn.Repositories.TutorAvailability> Availabilities { get; set; } = new List<CampusLearn.Repositories.TutorAvailability>();
 
         public IActionResult OnGet(int? id)
