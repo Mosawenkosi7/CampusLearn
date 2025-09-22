@@ -27,6 +27,15 @@ builder.Services.AddScoped< CampusLearn.Services.TutorService>();
 //-------------------------------end of adding services Dependency Injection here
 
 
+//External dependency injection
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 
 
@@ -36,6 +45,7 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+app.UseSession();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
