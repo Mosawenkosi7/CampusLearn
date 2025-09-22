@@ -1,31 +1,33 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Primitives;
+using CampusLearn.Models;
 
 namespace CampusLearn.Repositories
 {
     public class TutorRepository
     {
-        //coonect to DB
-
-        private readonly string _connectionString;  
+        private readonly string _connectionString;
+        
         public TutorRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection") ?? "";
         }
 
-        //method that returns a list of top 3 tutors
+        /// <summary>
+        /// Gets the top 3 tutors based on academic average
+        /// </summary>
+        /// <returns>List of top tutors</returns>
         public List<TutorCard> GetTopTutors()
         {
-            var tutors = new List<TutorCard>(); //list of tutors
+            var tutors = new List<TutorCard>();
 
-            //connect to DB
             using (SqlConnection connectDB = new SqlConnection(_connectionString))
             {
-                connectDB.Open(); //open connection
+                connectDB.Open();
 
-                //query to get top 3 tutors based on average grade and years of study
+                // Query to get top 3 tutors based on academic average
                 string query = @"
-                    SELECT TOP 3 tp.tutorId,tp.profilePicture,tp.academicAverage, users.firstName, users.lastName, sp.yearOfStudy, sp.program
+                    SELECT TOP 3 tp.tutorId, tp.profilePicture, tp.academicAverage, tp.tutorSummary,
+                           users.firstName, users.lastName, sp.yearOfStudy, sp.program, users.email
                     FROM tutorProfile AS tp
                     INNER JOIN users ON tp.studentNumber = users.personnelNumber
                     INNER JOIN studentProfile AS sp ON sp.studentNumber = tp.StudentNumber
@@ -34,7 +36,6 @@ namespace CampusLearn.Repositories
 
                 using (SqlCommand command = new SqlCommand(query, connectDB))
                 {
-                    //execute query
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -42,11 +43,15 @@ namespace CampusLearn.Repositories
                             var tutor = new TutorCard
                             {
                                 TutorId = reader.GetInt32(0),
-                                ProfilePicture = reader.GetString(1),
-                                AverageGrade = reader.GetDecimal(2),
-                                FullName = $"{reader.GetString(3)} {reader.GetString(4)}",
-                                YearsOfStudy = reader.GetInt32(5),
-                                Program = reader.GetString(6)
+                                ProfilePicture = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                                AcademicAverage = reader.GetDecimal(2),
+                                TutorSummary = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                FirstName = reader.GetString(4),
+                                LastName = reader.GetString(5),
+                                YearOfStudy = reader.GetInt32(6),
+                                Program = reader.GetString(7),
+                                Campus = "", // Default empty since campus column doesn't exist
+                                Email = reader.GetString(8)
                             };
                             tutors.Add(tutor);
                         }
@@ -57,7 +62,11 @@ namespace CampusLearn.Repositories
             return tutors;
         }
 
-        //method to get tutor profile by ID
+        /// <summary>
+        /// Gets a specific tutor's profile by ID
+        /// </summary>
+        /// <param name="tutorId">The tutor's ID</param>
+        /// <returns>TutorCard or null if not found</returns>
         public TutorCard? GetTutorProfile(int tutorId)
         {
             using (SqlConnection connectDB = new SqlConnection(_connectionString))
@@ -66,7 +75,7 @@ namespace CampusLearn.Repositories
 
                 string query = @"
                     SELECT tp.tutorId, tp.profilePicture, tp.academicAverage, tp.tutorSummary, 
-                           users.firstName, users.lastName, sp.yearOfStudy, sp.program
+                           users.firstName, users.lastName, sp.yearOfStudy, sp.program, users.email
                     FROM tutorProfile AS tp
                     INNER JOIN studentProfile AS sp ON tp.studentNumber = sp.studentNumber
                     INNER JOIN users ON sp.studentNumber = users.personnelNumber
@@ -84,11 +93,14 @@ namespace CampusLearn.Repositories
                             {
                                 TutorId = reader.GetInt32(0),
                                 ProfilePicture = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                                AverageGrade = reader.GetDecimal(2),
-                                Bio = reader.IsDBNull(3) ? "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." : reader.GetString(3),
-                                FullName = $"{reader.GetString(4)} {reader.GetString(5)}",
-                                YearsOfStudy = reader.GetInt32(6),
-                                Program = reader.GetString(7)
+                                AcademicAverage = reader.GetDecimal(2),
+                                TutorSummary = reader.IsDBNull(3) ? "No bio available yet." : reader.GetString(3),
+                                FirstName = reader.GetString(4),
+                                LastName = reader.GetString(5),
+                                YearOfStudy = reader.GetInt32(6),
+                                Program = reader.GetString(7),
+                                Campus = "", // Default empty since campus column doesn't exist
+                                Email = reader.GetString(8)
                             };
                         }
                     }
@@ -97,10 +109,14 @@ namespace CampusLearn.Repositories
             return null;
         }
 
-        //method to get tutor availability
-        public List<TutorAvailability> GetTutorAvailability(int tutorId)
+        /// <summary>
+        /// Gets available time slots for a tutor, excluding overlapping sessions
+        /// </summary>
+        /// <param name="tutorId">The tutor's ID</param>
+        /// <returns>List of available time slots</returns>
+        public List<TutorAvailabilityView> GetTutorAvailability(int tutorId)
         {
-            var availabilities = new List<TutorAvailability>();
+            var availabilities = new List<TutorAvailabilityView>();
 
             try
             {
@@ -109,11 +125,34 @@ namespace CampusLearn.Repositories
                     connectDB.Open();
 
                     string query = @"
-                        SELECT ta.tutorAvailabilityId, ta.moduleCode, ta.available,
+                        WITH BookedSessions AS (
+                            -- Get all booked sessions with their time ranges (assuming 1-hour sessions)
+                            SELECT ta.tutorId, ta.available as startTime, 
+                                   DATEADD(HOUR, 1, ta.available) as endTime
+                            FROM tutorAvailability ta
+                            INNER JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId
+                            WHERE ta.tutorId = @tutorId AND b.status = 'Active'
+                        )
+                        SELECT ta.tutorAvailabilityId, ta.tutorId, ta.moduleCode, ta.available,
                                CASE WHEN b.bookingId IS NOT NULL THEN 1 ELSE 0 END as isBooked
                         FROM tutorAvailability ta
                         LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId
-                        WHERE ta.tutorId = @tutorId AND ta.available >= GETDATE()
+                        WHERE ta.tutorId = @tutorId 
+                          AND ta.available >= GETDATE()
+                          -- Exclude slots that would overlap with existing booked sessions
+                          AND NOT EXISTS (
+                              SELECT 1 FROM BookedSessions bs
+                              WHERE (
+                                  -- New session would start during an existing session
+                                  (ta.available >= bs.startTime AND ta.available < bs.endTime)
+                                  OR
+                                  -- New session would end during an existing session  
+                                  (DATEADD(HOUR, 1, ta.available) > bs.startTime AND DATEADD(HOUR, 1, ta.available) <= bs.endTime)
+                                  OR
+                                  -- New session would completely contain an existing session
+                                  (ta.available <= bs.startTime AND DATEADD(HOUR, 1, ta.available) >= bs.endTime)
+                              )
+                          )
                         ORDER BY ta.available ASC";
 
                     using (SqlCommand command = new SqlCommand(query, connectDB))
@@ -124,15 +163,16 @@ namespace CampusLearn.Repositories
                         {
                             while (reader.Read())
                             {
-                                var availableDateTime = reader.GetDateTime(2);
-                                var availability = new TutorAvailability
+                                var availableDateTime = reader.GetDateTime(3);
+                                var availability = new TutorAvailabilityView
                                 {
-                                    AvailabilityId = reader.GetInt32(0),
-                                    Module = reader.GetString(1), // Using moduleCode directly
-                                    AvailableDate = availableDateTime.Date,
-                                    StartTime = availableDateTime.TimeOfDay,
-                                    EndTime = availableDateTime.AddHours(1).TimeOfDay, // Assuming 1-hour sessions
-                                    IsBooked = reader.GetBoolean(3)
+                                    TutorAvailabilityId = reader.GetInt32(0),
+                                    TutorId = reader.GetInt32(1),
+                                    ModuleCode = reader.GetString(2),
+                                    Available = availableDateTime,
+                                    Location = "Online", // Default since location column doesn't exist
+                                    IsActive = true, // Default since isActive column doesn't exist
+                                    IsBooked = reader.GetInt32(4) == 1
                                 };
                                 availabilities.Add(availability);
                             }
@@ -151,7 +191,12 @@ namespace CampusLearn.Repositories
 
 
 
-        //method to book availability
+        /// <summary>
+        /// Books an availability slot for a student
+        /// </summary>
+        /// <param name="availabilityId">The availability slot ID</param>
+        /// <param name="studentNumber">The student's number (default for demo)</param>
+        /// <returns>True if booking successful, false otherwise</returns>
         public bool BookAvailability(int availabilityId, string studentNumber = "ST12345678")
         {
             using (SqlConnection connectDB = new SqlConnection(_connectionString))
@@ -188,27 +233,5 @@ namespace CampusLearn.Repositories
         }
     }
 
-    public class TutorCard
-    {
-        public int TutorId { get; set; }
-        public decimal AverageGrade { get; set; }
-        public int YearsOfStudy { get; set; } 
-        public string FullName { get; set; } = "";
-        public string Program { get; set; } = "";
-        public string ProfilePicture { get; set; } = "";
 
-        public string Bio { get; set; } = "";
-    }
-
-
-
-    public class TutorAvailability
-    {
-        public int AvailabilityId { get; set; }
-        public string Module { get; set; } = "";
-        public DateTime AvailableDate { get; set; }
-        public TimeSpan StartTime { get; set; }
-        public TimeSpan EndTime { get; set; }
-        public bool IsBooked { get; set; }
-    }
 }

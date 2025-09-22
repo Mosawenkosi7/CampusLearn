@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using CampusLearn.Services;
-using CampusLearn.Repositories;
+using CampusLearn.Models;
 
 namespace CampusLearn.Pages.Tutor
 {
@@ -14,8 +14,8 @@ namespace CampusLearn.Pages.Tutor
             _tutorService = tutorService;
         }
 
-        public TutorCard? TutorProfile { get; set; }
-        public List<CampusLearn.Repositories.TutorAvailability> Availabilities { get; set; } = new List<CampusLearn.Repositories.TutorAvailability>();
+        public TutorCard? Tutor { get; set; }
+        public List<TutorAvailabilityView> Availabilities { get; set; } = new List<TutorAvailabilityView>();
 
         public IActionResult OnGet(int? id)
         {
@@ -24,8 +24,8 @@ namespace CampusLearn.Pages.Tutor
                 return NotFound();
             }
 
-            TutorProfile = _tutorService.GetTutorProfile(id.Value);
-            if (TutorProfile == null)
+            Tutor = _tutorService.GetTutorProfile(id.Value);
+            if (Tutor == null)
             {
                 return NotFound();
             }

@@ -152,17 +152,17 @@
             </div>
         }
 
-        @if (Model.TutorProfile != null)
+        @if (Model.Tutor != null)
         {
             <!-- Profile Header -->
             <div class="profile-header">
                 <div class="row align-items-center mb-4">
                     <div class="col-md-8">
-                        <h1 class="mb-3">Connect With @Model.TutorProfile.FullName</h1>
+                        <h1 class="mb-3">Connect With @Model.Tutor.FullName</h1>
                         <div class="row">
                             <div class="col-md-6">
-                                <p class="mb-2"><strong>Year of study:</strong> @Model.TutorProfile.YearsOfStudy</p>
-                                <p class="mb-0"><strong>Course:</strong> @Model.TutorProfile.Program</p>
+                                <p class="mb-2"><strong>Year of study:</strong> @Model.Tutor.YearsOfStudy</p>
+                                <p class="mb-0"><strong>Course:</strong> @Model.Tutor.Program</p>
                             </div>
                         </div>
                     </div>
@@ -180,9 +180,9 @@
                     <div class="col-md-6">
                         <div class="row">
                             <div class="col-4">
-                                @if (!string.IsNullOrEmpty(Model.TutorProfile.ProfilePicture))
+                                @if (!string.IsNullOrEmpty(Model.Tutor.ProfilePicture))
                                 {
-                                    <img src="/Media/tutors/@Model.TutorProfile.ProfilePicture" alt="@Model.TutorProfile.FullName" class="profile-image">
+                                    <img src="/Media/tutors/@Model.Tutor.ProfilePicture" alt="@Model.Tutor.FullName" class="profile-image">
                                 }
                                 else
                                 {
@@ -193,7 +193,7 @@
                             </div>
                             <div class="col-8">
                                 <div class="bio-box">
-                                    <p class="mb-0">@Model.TutorProfile.Bio</p>
+                                    <p class="mb-0">@Model.Tutor.Bio</p>
                                 </div>
                             </div>
                         </div>
@@ -228,7 +228,7 @@
                                                     <td>
                                                         <form method="post" asp-page-handler="Book" class="d-inline">
                                                             <input type="hidden" name="availabilityId" value="@availability.AvailabilityId" />
-                                                            <input type="hidden" name="tutorId" value="@Model.TutorProfile.TutorId" />
+                                                            <input type="hidden" name="tutorId" value="@Model.Tutor.TutorId" />
                                                             <button type="submit" class="book-btn">Book</button>
                                                         </form>
                                                     </td>
