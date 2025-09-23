@@ -1,0 +1,29 @@
+﻿body {
+    background: linear-gradient( rgba(255, 255, 255, 0.895),
+    /* 80% white */ rgba(255, 255, 255, 0.895) ), url("/Media/common/background.jpg");
+}
+
+.pagination{
+    height: 30px;
+/*    background-color: blue;*/
+}
+
+.bookings-summary {
+    padding:25px;
+    margin-top: 70px;
+    background-color: white;
+    display: flex;
+    justify-content: space-around;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.bookings-summary div div{
+    align-items: flex-end
+}
+
+.notifications{
+    margin-top:40px;
+    height: 350px;
+    background-color: grey;
+}

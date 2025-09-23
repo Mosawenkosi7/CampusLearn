@@ -6,18 +6,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 //add the Repository here --------------------------------------
 builder.Services.AddScoped< CampusLearn.Repositories.TutorRepository>();
-
+builder.Services.AddScoped<CampusLearn.Repositories.StudentDashboardRepository>();
 
 
 //-------------------------------end of adding the repository here
 
 
 
-
-
 //add services Dependency Injection here----------------------------
 builder.Services.AddScoped< CampusLearn.Services.TutorService>();
-
+builder.Services.AddScoped<CampusLearn.Services.StudentDashboardService>();
 
 
 
