@@ -57,5 +57,11 @@ namespace CampusLearn.Services
         {
             return _tutorRepository.BookAvailability(availabilityId);
         }
+        public PagedResult<TutorCard> GetTutors(TutorQuery query)
+        {
+            return _tutorRepository.GetTutors(query);
+        }
+
+       
     }
 }

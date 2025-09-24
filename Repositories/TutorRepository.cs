@@ -1,12 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System.Reflection.PortableExecutable;
 using CampusLearn.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Primitives;
 
 namespace CampusLearn.Repositories
 {
     public class TutorRepository
     {
+        //coonect to DB
+
         private readonly string _connectionString;
-        
         public TutorRepository(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection") ?? "";
@@ -231,7 +234,103 @@ namespace CampusLearn.Repositories
                 }
             }
         }
+
+        /// <summary>
+        /// Gets paged and filtered tutors for All Tutors page
+        /// </summary>
+        /// <param name="query">Query parameters for filtering and paging</param>
+        /// <returns>Paged result of tutors</returns>
+        public PagedResult<TutorCard> GetTutors(TutorQuery query)
+        {
+            var result = new PagedResult<TutorCard>
+            {
+                Page = query.Page,
+                PageSize = query.PageSize
+            };
+
+            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            {
+                connectDB.Open();
+
+                // count query with filters
+                string countSql = @"
+                    SELECT COUNT(*)
+                    FROM tutorProfile tp
+                    INNER JOIN users u ON tp.studentNumber = u.personnelNumber
+                    INNER JOIN studentProfile sp ON sp.studentNumber = tp.studentNumber
+                    WHERE ( @search IS NULL OR (u.firstName + ' ' + u.lastName LIKE '%' + @search + '%') )
+                      AND ( @moduleCode IS NULL OR EXISTS (
+                            SELECT 1 FROM tutorModules tm WHERE tm.tutorId = tp.tutorId AND tm.moduleCode = @moduleCode
+                          ) )
+                      AND ( @yearOfStudy IS NULL OR sp.yearOfStudy = @yearOfStudy );";
+
+                using (var countCmd = new SqlCommand(countSql, connectDB))
+                {
+                    countCmd.Parameters.AddWithValue("@search", (object?)query.Search ?? DBNull.Value);
+                    countCmd.Parameters.AddWithValue("@moduleCode", (object?)query.ModuleCode ?? DBNull.Value);
+                    countCmd.Parameters.AddWithValue("@yearOfStudy", (object?)query.YearOfStudy ?? DBNull.Value);
+                    result.TotalCount = (int)countCmd.ExecuteScalar();
+                }
+
+                // main query with pagination
+                string dataSql = @"
+                    WITH filtered AS (
+                        SELECT tp.tutorId,
+                               tp.profilePicture,
+                               tp.academicAverage,
+                               u.firstName,
+                               u.lastName,
+                               sp.yearOfStudy,
+                               sp.program
+                        FROM tutorProfile tp
+                        INNER JOIN users u ON tp.studentNumber = u.personnelNumber
+                        INNER JOIN studentProfile sp ON sp.studentNumber = tp.studentNumber
+                        WHERE ( @search IS NULL OR (u.firstName + ' ' + u.lastName LIKE '%' + @search + '%') )
+                          AND ( @moduleCode IS NULL OR EXISTS (
+                                SELECT 1 FROM tutorModules tm WHERE tm.tutorId = tp.tutorId AND tm.moduleCode = @moduleCode
+                              ) )
+                          AND ( @yearOfStudy IS NULL OR sp.yearOfStudy = @yearOfStudy )
+                    )
+                    SELECT *
+                    FROM filtered
+                    ORDER BY academicAverage DESC
+                    OFFSET @offset ROWS FETCH NEXT @pageSize ROWS ONLY;";
+
+                using (var cmd = new SqlCommand(dataSql, connectDB))
+                {
+                    int offset = (query.Page - 1) * query.PageSize;
+                    cmd.Parameters.AddWithValue("@search", (object?)query.Search ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@moduleCode", (object?)query.ModuleCode ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@yearOfStudy", (object?)query.YearOfStudy ?? DBNull.Value);
+                    cmd.Parameters.AddWithValue("@offset", offset);
+                    cmd.Parameters.AddWithValue("@pageSize", query.PageSize);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            var tutor = new TutorCard
+                            {
+                                TutorId = reader.GetInt32(0),
+                                ProfilePicture = reader.IsDBNull(1) ? "/Media/tutors/default.jpg": "/Media/tutors/" + reader.GetString(1),
+                                AcademicAverage = reader.GetDecimal(2),
+                                FirstName = reader.GetString(3),
+                                LastName = reader.GetString(4),
+                                YearOfStudy = reader.GetInt32(5),
+                                Program = reader.GetString(6),
+                                Campus = "",
+                                Email = ""
+                            };
+                            result.Items.Add(tutor);
+                        }
+                    }
+                }
+               
+
+                // Note: Modules functionality removed to maintain clean TutorCard structure
+            }
+
+            return result;
+        }
     }
-
-
 }
