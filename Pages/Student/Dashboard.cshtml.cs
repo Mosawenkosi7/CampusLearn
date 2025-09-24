@@ -31,8 +31,11 @@ namespace CampusLearn.Pages.Student
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
+        
+
         public void OnGet(int p = 1)
         {
+            HttpContext.Session.SetString("role", "student");
             HttpContext.Session.SetString("studentId", "ST12345678");
             var studentId = HttpContext.Session.GetString("studentId") ?? "";
             if(studentId == null)
@@ -64,5 +67,7 @@ namespace CampusLearn.Pages.Student
 
             completedSessions = _studentDashboardService.CompletedSessions(studentId);
         }
+
+      
     }
 }

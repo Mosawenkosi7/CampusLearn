@@ -30,7 +30,7 @@ namespace CampusLearn.Pages.Tutor
                 return NotFound();
             }
 
-            Availabilities = _tutorService.GetTutorAvailability(id.Value);
+            Availabilities = _tutorService.GetTutorAvailability(tutorId.Value);
             return Page();
         }
 

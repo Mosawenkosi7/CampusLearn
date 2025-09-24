@@ -9,5 +9,9 @@ namespace CampusLearn.Models
         public string Password { get; set; } = "";
         public string Role { get; set; } = "";
         public DateTime CreatedAt { get; set; }
+
+        //full name
+        // Computed property (read-only)
+        public string FullName => FirstName + " " + LastName;
     }
 }

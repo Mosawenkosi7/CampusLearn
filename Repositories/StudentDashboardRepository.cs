@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using CampusLearn.Models;
+using Microsoft.Data.SqlClient;
 
 namespace CampusLearn.Repositories
 {
@@ -22,7 +23,7 @@ namespace CampusLearn.Repositories
                 connectDB.Open();
 
                 string query = @"
-                                SELECT * FROM booking AS b
+                                SELECT u.firstName,u.lastName,ta.moduleCode,b.dateBooked, b.status FROM booking AS b
                                 INNER JOIN tutorAvailability AS ta ON b.tutorAvailabilityId = ta.tutorAvailabilityId
                                 INNER JOIN users AS u ON u.personnelNumber = b.studentNumber
                                 WHERE studentNumber = @StudentId";
@@ -36,12 +37,11 @@ namespace CampusLearn.Repositories
                         while (read.Read())
                         {
                             AppointmentTable appointmentTable = new AppointmentTable();
-
-                            appointmentTable.TutorName = read.GetString(18) + " " + read.GetString(19) ;
-                            appointmentTable.Subject = read.GetString(11);
-                            appointmentTable.AppointmentDate = read.GetDateTime(7);
-                            appointmentTable.Status = read.GetString(8);
-
+                            appointmentTable.User.FirstName = read.GetString(0);
+                            appointmentTable.User.LastName = read.GetString(1);
+                            appointmentTable.TutorAvailability.ModuleCode = read.GetString(2);
+                            appointmentTable.TutorAvailability.Available = read.GetDateTime(3);
+                            appointmentTable.Booking.Status = read.GetString(4);
                             appointments.Add(appointmentTable);
                         }
                     }
@@ -144,10 +144,10 @@ namespace CampusLearn.Repositories
     }
 
     public class AppointmentTable {
-        public string TutorName { get; set; } = "";
-        public string Subject { get; set; } = "";
-        public DateTime AppointmentDate { get; set; }
-        public string Status { get; set; } = ""; 
-    
+        public Booking Booking { get; set; } = new Booking(); //i need date booked, status
+
+        public User User { get; set; } = new User(); //get the tutor name
+
+        public TutorAvailability TutorAvailability { get; set; } = new TutorAvailability(); //we want the module code
     }
 }

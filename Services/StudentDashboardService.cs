@@ -19,12 +19,12 @@ namespace CampusLearn.Services
 
             var now = DateTime.Now;
             var upcoming = appointmentTables
-                .Where(a => a.AppointmentDate >= now)
-                .OrderBy(a => a.AppointmentDate);
+                .Where(a => a.Booking.DateBooked >= now)
+                .OrderBy(a => a.Booking.DateBooked);
 
             var past = appointmentTables
-                .Where(a => a.AppointmentDate < now)
-                .OrderByDescending(a => a.AppointmentDate);
+                .Where(a => a.Booking.DateBooked < now)
+                .OrderByDescending(a => a.Booking.DateBooked);
 
             return upcoming.Concat(past).ToList();
         }
