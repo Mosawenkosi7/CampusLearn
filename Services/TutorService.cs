@@ -1,4 +1,5 @@
 ﻿using CampusLearn.Repositories;
+using CampusLearn.Models;
 
 namespace CampusLearn.Services
 {
@@ -18,5 +19,11 @@ namespace CampusLearn.Services
             tutors = tutors.Where(tutor => tutor.AverageGrade >= 75).ToList();
             return tutors;
         }
+        public PagedResult<TutorCard> GetTutors(TutorQuery query)
+        {
+            return _tutorRepository.GetTutors(query);
+        }
+
+       
     }
 }

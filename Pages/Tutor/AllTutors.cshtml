@@ -2,3 +2,67 @@
 @model CampusLearn.Pages.Tutor.AllTutorsModel
 @{
 }
+
+<div class="container py-4">
+    <h2 class="mb-4">Mett all our Tutors here at CampuslEARN</h2>
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input name="Search" value="@Model.Search" class="form-control" placeholder="Search tutor by name" />
+        </div>
+        <div class="col-md-3">
+            <input name="ModuleCode" value="@Model.ModuleCode" class="form-control" placeholder="Filter by module code e.g. CS101" />
+        </div>
+        <div class="col-md-3">
+            <input name="YearOfStudy" value="@Model.YearOfStudy" class="form-control" placeholder="Year of study" />
+        </div>
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </div>
+    </form>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @foreach (var t in Model.Tutors.Items)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="@t.ProfilePicture" class="card-img-top" alt="@t.FullName" onerror="this.src='/Media/tutors/tutor1.jpg'">
+                    <div class="card-body">
+                        <h5 class="card-title mb-1">@t.FullName</h5>
+                        <div class="text-muted small">Year of study: @t.YearsOfStudy • @t.Program</div>
+                        <div class="mt-2">
+                            <span class="badge bg-success">Avg: @t.AverageGrade</span>
+                            @if (t.Modules.Any())
+                            {
+                                foreach (var m in t.Modules.Take(3))
+                                {
+                                    <span class="badge bg-secondary">@m</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            @{
+                int current = Model.Tutors.Page;
+                int total = Model.Tutors.TotalPages;
+            }
+            <li class="page-item @(current <= 1 ? "disabled" : null)">
+                <a class="page-link" href="?Search=@Model.Search&ModuleCode=@Model.ModuleCode&YearOfStudy=@Model.YearOfStudy&PageNumber=@(current - 1)">Previous</a>
+            </li>
+            @for (int i = 1; i <= total; i++)
+            {
+                <li class="page-item @(i == current ? "active" : null)">
+                    <a class="page-link" href="?Search=@Model.Search&ModuleCode=@Model.ModuleCode&YearOfStudy=@Model.YearOfStudy&PageNumber=@i">@i</a>
+                </li>
+            }
+            <li class="page-item @(current >= total ? "disabled" : null)">
+                <a class="page-link" href="?Search=@Model.Search&ModuleCode=@Model.ModuleCode&YearOfStudy=@Model.YearOfStudy&PageNumber=@(current + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

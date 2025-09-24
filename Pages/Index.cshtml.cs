@@ -1,4 +1,5 @@
 using CampusLearn.Repositories;
+using CampusLearn.Models;
 using CampusLearn.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
