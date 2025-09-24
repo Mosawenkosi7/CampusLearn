@@ -1,6 +1,5 @@
 /* BookTutor Page Styles */
 
-/* Typography - Matching BCConnect/Moodle styling */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size: 14px;
@@ -29,14 +28,14 @@ body {
 }
 
 .tcHeading {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin-bottom: 0;
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: #2c3e50;
-  border-bottom: 3px solid #b41b61;
-  display: inline-block;
-  padding-bottom: 0.5rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-bottom: 0;
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #2c3e50;
+    border-bottom: 3px solid #4ac1c1;
+    display: inline-block;
+    padding-bottom: 0.5rem;
 }
 
 /* Booking Form Section */
@@ -170,10 +169,10 @@ body {
   font-weight: 500;
   cursor: pointer;
   margin-bottom: 0;
+  margin-left: 0.75rem;
 }
 
 .termsCheckbox {
-  margin-right: 0.75rem;
   width: 1.25rem;
   height: 1.25rem;
   cursor: pointer;
@@ -335,61 +334,46 @@ body {
 }
 
 /* Form Validation Styles */
-.field-error {
-  border-bottom: 3px solid #dc3545 !important;
-  background-color: #fff5f5 !important;
+.input-control.success input,
+.input-control.success select,
+.input-control.success textarea {
+  border-color: #09c372;
 }
 
-.field-success {
-  border-bottom: 3px solid #28a745 !important;
-  background-color: #f8fff8 !important;
+.input-control.error input,
+.input-control.error select,
+.input-control.error textarea {
+  border-color: #ff3860;
 }
 
-.field-error-message {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  font-weight: 500;
+.input-control .error {
+  color: #ff3860;
+  font-size: 12px;
+  height: 13px;
 }
 
-.field-success-message {
-  color: #28a745;
-  font-size: 0.875rem;
-  margin-top: 0.25rem;
-  font-weight: 500;
+.input-control .success {
+  border: 1px solid #09c372;
+  padding: 5px;
+  border-radius: 3px;
+  margin-top: 5px;
 }
 
-.terms-error {
-  border: 2px solid #dc3545 !important;
-  background-color: #fff5f5 !important;
+.input-control {
+  position: relative;
 }
 
-.terms-success {
-  border: 2px solid #28a745 !important;
-  background-color: #f8fff8 !important;
+.input-control input,
+.input-control select,
+.input-control textarea {
+  border: 2px solid #e1e5e9;
+  transition: border-color 0.3s ease;
 }
 
-.terms-error-message {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
+.input-control.error {
+  border-color: #ff3860;
 }
 
-.terms-success-message {
-  color: #28a745;
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-  font-weight: 500;
-}
-
-.form-error-message {
-  background-color: #f8d7da;
-  color: #721c24;
-  padding: 0.75rem 1rem;
-  border-radius: 0.375rem;
-  border: 1px solid #f5c6cb;
-  margin-bottom: 1rem;
-  font-weight: 500;
-  text-align: center;
+.input-control.success {
+  border-color: #09c372;
 }

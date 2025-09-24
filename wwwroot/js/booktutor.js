@@ -1,59 +1,248 @@
-// BookTutor Page JavaScript
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('studentResources');
-    const selectedFilesContainer = document.getElementById('selectedFilesContainer');
-    const selectedFilesList = document.getElementById('selectedFilesList');
-    const fileUploadDisplay = document.querySelector('.fileUploadDisplay');
-    const form = document.querySelector('form');
+/* FORM VALIDATION */
+
+// File upload functionality and form validation
+    document.addEventListener('DOMContentLoaded', function() {
+    // Get the form and input elements
+    const form = document.getElementById("BookTutorForm");
+    const studentName = document.getElementById("studentName");
+    const studentEmail = document.getElementById("studentEmail");
+    const module = document.getElementById("module");
+    const preferredDate = document.getElementById("preferredDate");
+    const preferredTime = document.getElementById("preferredTime");
+    const sessionDuration = document.getElementById("sessionDuration");
+    const location = document.getElementById("location");
+    const bookingSummary = document.getElementById("BookingSummary");
+    const agreeTerms = document.getElementById("agreeTerms");
+
+    // Adding event listener to the form to prevent the default submission and validate inputs
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            validateInputs();
+        });
+    }
+
+    // Function to display error messages
+    const setError = (element, message) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector(".error");
+
+        errorDisplay.innerText = message;
+        inputControl.classList.add("error");
+        inputControl.classList.remove("success");
+    };
+
+    // Function for success validation
+    const setSuccess = (element) => {
+        const inputControl = element.parentElement;
+        const errorDisplay = inputControl.querySelector(".error");
+
+        errorDisplay.innerText = "";
+        inputControl.classList.add("success");
+        inputControl.classList.remove("error");
+    };
+
+    // Function to validate email format
+    const isValidEmail = (email) => {
+        const re =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    };
+
+    // Function to validate date (must be future date)
+    const isValidDate = (date) => {
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return selectedDate > today;
+    };
+
+    // Function to validate all inputs
+    const validateInputs = () => {
+        const studentNameValue = studentName.value.trim();
+        const studentEmailValue = studentEmail.value.trim();
+        const moduleValue = module.value.trim();
+        const preferredDateValue = preferredDate.value.trim();
+        const preferredTimeValue = preferredTime.value.trim();
+        const sessionDurationValue = sessionDuration.value.trim();
+        const locationValue = location.value.trim();
+        const bookingSummaryValue = bookingSummary.value.trim();
+
+        // Validate student name
+        if (studentNameValue === "") {
+            setError(studentName, "Student name is required");
+        } else {
+            setSuccess(studentName);
+        }
+
+        // Validate email
+        if (studentEmailValue === "") {
+            setError(studentEmail, "Email is required");
+        } else if (!isValidEmail(studentEmailValue)) {
+            setError(studentEmail, "Provide a valid email address");
+        } else {
+            setSuccess(studentEmail);
+        }
+
+        // Validate module
+        if (moduleValue === "") {
+            setError(module, "Module is required");
+        } else {
+            setSuccess(module);
+        }
+
+        // Validate preferred date
+        if (preferredDateValue === "") {
+            setError(preferredDate, "Preferred date is required");
+        } else if (!isValidDate(preferredDateValue)) {
+            setError(preferredDate, "Please select a future date");
+        } else {
+            setSuccess(preferredDate);
+        }
+
+        // Validate preferred time
+        if (preferredTimeValue === "" || preferredTimeValue === "Select time") {
+            setError(preferredTime, "Please select a time");
+        } else {
+            setSuccess(preferredTime);
+        }
+
+        // Validate session duration
+        if (sessionDurationValue === "" || sessionDurationValue === "Select duration") {
+            setError(sessionDuration, "Please select a session duration");
+        } else {
+            setSuccess(sessionDuration);
+        }
+
+        // Validate location
+        if (locationValue === "" || locationValue === "Select Location") {
+            setError(location, "Please select a location");
+        } else {
+            setSuccess(location);
+        }
+
+        // Validate booking summary
+        if (bookingSummaryValue === "") {
+            setError(bookingSummary, "Booking summary is required");
+        } else if (bookingSummaryValue.length < 10) {
+            setError(bookingSummary, "Booking summary must be at least 10 characters long");
+        } else {
+            setSuccess(bookingSummary);
+        }
+
+        // Validate terms agreement
+        if (!agreeTerms.checked) {
+            setError(agreeTerms, "You must agree to the terms and conditions");
+        } else {
+            setSuccess(agreeTerms);
+        }
+
+        // Check if all validations passed
+        const allInputControls = form.querySelectorAll('.input-control');
+        let allValid = true;
+        
+        allInputControls.forEach(control => {
+            if (control.classList.contains('error')) {
+                allValid = false;
+            }
+        });
+
+        if (allValid) {
+            // All validations passed, submit the form
+            form.submit();
+        }
+    };
+
+    // File upload functionality
+    const fileInput1 = document.getElementById('studentResource1');
+    const fileInput2 = document.getElementById('studentResource2');
+    const selectedFilesContainer1 = document.getElementById('selectedFilesContainer1');
+    const selectedFilesContainer2 = document.getElementById('selectedFilesContainer2');
+    const selectedFilesList1 = document.getElementById('selectedFilesList1');
+    const selectedFilesList2 = document.getElementById('selectedFilesList2');
+    const fileUploadDisplay1 = fileInput1?.parentElement.querySelector('.fileUploadDisplay');
+    const fileUploadDisplay2 = fileInput2?.parentElement.querySelector('.fileUploadDisplay');
     
-    // Form validation
-    initializeFormValidation();
+    // Handle file selection for first upload
+    if (fileInput1) {
+        fileInput1.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            displaySelectedFiles(files, selectedFilesContainer1, selectedFilesList1);
+        });
+        
+        // Handle drag and drop for first upload
+        if (fileUploadDisplay1) {
+            fileUploadDisplay1.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUploadDisplay1.style.backgroundColor = '#e8eaed';
+            });
+            
+            fileUploadDisplay1.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                fileUploadDisplay1.style.backgroundColor = '#f1f3f4';
+            });
+            
+            fileUploadDisplay1.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUploadDisplay1.style.backgroundColor = '#f1f3f4';
+                const files = Array.from(e.dataTransfer.files);
+                fileInput1.files = e.dataTransfer.files;
+                displaySelectedFiles(files, selectedFilesContainer1, selectedFilesList1);
+            });
+        }
+    }
     
-    // Handle file selection
-    fileInput.addEventListener('change', function(e) {
+    // Handle file selection for second upload
+    if (fileInput2) {
+        fileInput2.addEventListener('change', function(e) {
         const files = Array.from(e.target.files);
-        displaySelectedFiles(files);
+            displaySelectedFiles(files, selectedFilesContainer2, selectedFilesList2);
     });
     
-    // Handle drag and drop
-    fileUploadDisplay.addEventListener('dragover', function(e) {
+        // Handle drag and drop for second upload
+        if (fileUploadDisplay2) {
+            fileUploadDisplay2.addEventListener('dragover', function(e) {
         e.preventDefault();
-        fileUploadDisplay.style.backgroundColor = '#e8eaed';
+                fileUploadDisplay2.style.backgroundColor = '#e8eaed';
     });
     
-    fileUploadDisplay.addEventListener('dragleave', function(e) {
+            fileUploadDisplay2.addEventListener('dragleave', function(e) {
         e.preventDefault();
-        fileUploadDisplay.style.backgroundColor = '#f1f3f4';
+                fileUploadDisplay2.style.backgroundColor = '#f1f3f4';
     });
     
-    fileUploadDisplay.addEventListener('drop', function(e) {
+            fileUploadDisplay2.addEventListener('drop', function(e) {
         e.preventDefault();
-        fileUploadDisplay.style.backgroundColor = '#f1f3f4';
+                fileUploadDisplay2.style.backgroundColor = '#f1f3f4';
         const files = Array.from(e.dataTransfer.files);
-        fileInput.files = e.dataTransfer.files;
-        displaySelectedFiles(files);
+                fileInput2.files = e.dataTransfer.files;
+                displaySelectedFiles(files, selectedFilesContainer2, selectedFilesList2);
     });
+        }
+    }
     
     // Display selected files
-    function displaySelectedFiles(files) {
+    function displaySelectedFiles(files, container, list) {
+        if (!container || !list) return;
+        
         if (files.length === 0) {
-            selectedFilesContainer.style.display = 'none';
+            container.style.display = 'none';
             return;
         }
         
-        selectedFilesList.innerHTML = '';
+        list.innerHTML = '';
         files.forEach(function(file, index) {
             const listItem = document.createElement('li');
             listItem.className = 'selectedFileItem';
             listItem.innerHTML = `
                 <span class="fileName">${file.name}</span>
                 <span class="fileSize">(${formatFileSize(file.size)})</span>
-                <button type="button" class="removeFileBtn" onclick="removeFile(${index})">×</button>
+                <button type="button" class="removeFileBtn" onclick="removeFile(${index}, '${container.id}')">×</button>
             `;
-            selectedFilesList.appendChild(listItem);
+            list.appendChild(listItem);
         });
         
-        selectedFilesContainer.style.display = 'block';
+        container.style.display = 'block';
     }
     
     // Format file size
@@ -66,7 +255,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Remove file function (global scope for onclick)
-    window.removeFile = function(index) {
+    window.removeFile = function(index, containerId) {
+        const container = document.getElementById(containerId);
+        const fileInput = container.closest('.fileUploadContainer').querySelector('input[type="file"]');
+        const list = container.querySelector('.selectedFilesList');
+        
         const dt = new DataTransfer();
         const files = Array.from(fileInput.files);
         files.splice(index, 1);
@@ -74,208 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
         files.forEach(file => dt.items.add(file));
         fileInput.files = dt.files;
         
-        displaySelectedFiles(files);
+        displaySelectedFiles(files, container, list);
     };
-    
-    // Form validation functions
-    function initializeFormValidation() {
-        const requiredFields = [
-            { id: 'studentName', name: 'Student Name' },
-            { id: 'studentEmail', name: 'Email Address' },
-            { id: 'subject', name: 'Subject' },
-            { id: 'preferredDate', name: 'Preferred Date' },
-            { id: 'preferredTime', name: 'Preferred Time' },
-            { id: 'sessionDuration', name: 'Session Duration' }
-        ];
-        
-        // Add validation to each required field
-        requiredFields.forEach(field => {
-            const element = document.getElementById(field.id);
-            if (element) {
-                element.addEventListener('blur', () => validateField(field.id, field.name));
-                element.addEventListener('input', () => clearValidation(field.id));
-            }
-        });
-        
-        // Add validation to terms checkbox
-        const termsCheckbox = document.getElementById('agreeTerms');
-        if (termsCheckbox) {
-            termsCheckbox.addEventListener('change', () => validateTerms());
-        }
-        
-        // Prevent form submission if validation fails
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            let isValid = true;
-            
-            // Clear all existing validation first
-            requiredFields.forEach(field => {
-                clearValidation(field.id);
-            });
-            
-            // Validate all required fields and show errors for empty ones
-            requiredFields.forEach(field => {
-                const fieldElement = document.getElementById(field.id);
-                const value = fieldElement.value.trim();
-                
-                if (!value) {
-                    // Force show error for empty fields
-                    showFieldError(field.id, `${field.name} is required`);
-                    isValid = false;
-                } else {
-                    // Validate non-empty fields normally
-                    if (!validateField(field.id, field.name)) {
-                        isValid = false;
-                    }
-                }
-            });
-            
-            // Validate terms agreement
-            if (!validateTerms()) {
-                isValid = false;
-            }
-            
-            if (isValid) {
-                // All validations passed, submit the form
-                form.submit();
-            } else {
-                // Show general error message
-                showFormError('Please fix all errors before submitting the form.');
-            }
-        });
-    }
-    
-    function validateField(fieldId, fieldName) {
-        const field = document.getElementById(fieldId);
-        const value = field.value.trim();
-        
-        if (!value) {
-            showFieldError(fieldId, `${fieldName} is required`);
-            return false;
-        }
-        
-        // Additional validation for email
-        if (fieldId === 'studentEmail') {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(value)) {
-                showFieldError(fieldId, 'Please enter a valid email address');
-                return false;
-            }
-        }
-        
-        // Additional validation for date (must be future date)
-        if (fieldId === 'preferredDate') {
-            const selectedDate = new Date(value);
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            
-            if (selectedDate <= today) {
-                showFieldError(fieldId, 'Please select a future date');
-                return false;
-            }
-        }
-        
-        showFieldSuccess(fieldId);
-        return true;
-    }
-    
-    function validateTerms() {
-        const termsCheckbox = document.getElementById('agreeTerms');
-        const termsContainer = document.querySelector('.termsAgreementContainer');
-        
-        if (!termsCheckbox.checked) {
-            showTermsError('You must agree to the terms and conditions');
-            return false;
-        }
-        
-        showTermsSuccess();
-        return true;
-    }
-    
-    function showFieldError(fieldId, message) {
-        const field = document.getElementById(fieldId);
-        const container = field.closest('.formFieldHalf') || field.closest('.notesFieldContainer');
-        
-        // Add error styling
-        field.classList.add('field-error');
-        
-        // Add error message
-        const errorElement = document.createElement('div');
-        errorElement.className = 'field-error-message';
-        errorElement.textContent = message;
-        container.appendChild(errorElement);
-    }
-    
-    function showFieldSuccess(fieldId) {
-        const field = document.getElementById(fieldId);
-        const container = field.closest('.formFieldHalf') || field.closest('.notesFieldContainer');
-        
-        // Remove existing validation elements
-        clearValidation(fieldId);
-        
-        // Add success styling only (no text message)
-        field.classList.add('field-success');
-    }
-    
-    function showTermsError(message) {
-        const termsContainer = document.querySelector('.termsAgreementContainer');
-        
-        // Remove existing validation elements
-        const existingError = termsContainer.querySelector('.terms-error-message');
-        const existingSuccess = termsContainer.querySelector('.terms-success-message');
-        if (existingError) existingError.remove();
-        if (existingSuccess) existingSuccess.remove();
-        
-        // Add error styling
-        termsContainer.classList.add('terms-error');
-        
-        // Add error message
-        const errorElement = document.createElement('div');
-        errorElement.className = 'terms-error-message';
-        errorElement.textContent = message;
-        termsContainer.appendChild(errorElement);
-    }
-    
-    function showTermsSuccess() {
-        const termsContainer = document.querySelector('.termsAgreementContainer');
-        
-        // Remove existing validation elements
-        const existingError = termsContainer.querySelector('.terms-error-message');
-        const existingSuccess = termsContainer.querySelector('.terms-success-message');
-        if (existingError) existingError.remove();
-        if (existingSuccess) existingSuccess.remove();
-        
-        // Add success styling only (no text message)
-        termsContainer.classList.add('terms-success');
-    }
-    
-    function clearValidation(fieldId) {
-        const field = document.getElementById(fieldId);
-        const container = field.closest('.formFieldHalf') || field.closest('.notesFieldContainer');
-        
-        // Remove styling
-        field.classList.remove('field-error', 'field-success');
-        
-        // Remove messages
-        const errorMessage = container.querySelector('.field-error-message');
-        const successMessage = container.querySelector('.field-success-message');
-        if (errorMessage) errorMessage.remove();
-        if (successMessage) successMessage.remove();
-    }
-    
-    function showFormError(message) {
-        // Remove existing form error
-        const existingError = document.querySelector('.form-error-message');
-        if (existingError) existingError.remove();
-        
-        // Create error message
-        const errorElement = document.createElement('div');
-        errorElement.className = 'form-error-message';
-        errorElement.textContent = message;
-        
-        // Insert before submit button
-        const submitContainer = document.querySelector('.submitButtonContainer');
-        submitContainer.parentNode.insertBefore(errorElement, submitContainer);
-    }
 });
