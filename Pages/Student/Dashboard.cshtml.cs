@@ -36,13 +36,14 @@ namespace CampusLearn.Pages.Student
         public void OnGet(int p = 1)
         {
             HttpContext.Session.SetString("studentId", "ST12345678");
-            var studentId = HttpContext.Session.GetString("studentId") ?? "";
-            if (studentId == null)
+            var studentId = HttpContext.Session.GetString("studentId");
+            if(string.IsNullOrEmpty(studentId))
             {
                 RedirectToPage("/Authentication/LogIn");
+                return; // Important: exit early if no student ID
             }
 
-            // all data ordered from service
+            // all data ordered from service - studentId is guaranteed non-null here
             var allAppointments = _studentDashboardService.GetAppointmentTables(studentId);
 
             // pagination setup
