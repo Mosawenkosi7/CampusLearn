@@ -68,14 +68,14 @@
         const locationValue = location.value.trim();
         const bookingSummaryValue = bookingSummary.value.trim();
 
-        // Validate student name
+        // Validate student name (readonly - should always be valid)
         if (studentNameValue === "") {
             setError(studentName, "Student name is required");
         } else {
             setSuccess(studentName);
         }
 
-        // Validate email
+        // Validate email (readonly - should always be valid)
         if (studentEmailValue === "") {
             setError(studentEmail, "Email is required");
         } else if (!isValidEmail(studentEmailValue)) {
@@ -84,25 +84,23 @@
             setSuccess(studentEmail);
         }
 
-        // Validate module
+        // Validate module (readonly - should always be valid)
         if (moduleValue === "") {
             setError(module, "Module is required");
         } else {
             setSuccess(module);
         }
 
-        // Validate preferred date
+        // Validate preferred date (readonly - should always be valid)
         if (preferredDateValue === "") {
             setError(preferredDate, "Preferred date is required");
-        } else if (!isValidDate(preferredDateValue)) {
-            setError(preferredDate, "Please select a future date");
         } else {
             setSuccess(preferredDate);
         }
 
-        // Validate preferred time
-        if (preferredTimeValue === "" || preferredTimeValue === "Select time") {
-            setError(preferredTime, "Please select a time");
+        // Validate preferred time (readonly - should always be valid)
+        if (preferredTimeValue === "") {
+            setError(preferredTime, "Preferred time is required");
         } else {
             setSuccess(preferredTime);
         }

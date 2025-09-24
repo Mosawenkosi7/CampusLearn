@@ -221,11 +221,7 @@
                                                         <small class="text-muted">@availability.StartTime.ToString(@"hh\:mm")</small>
                                                     </td>
                                                     <td>
-                                                        <form method="post" asp-page-handler="Book" class="d-inline">
-                                                            <input type="hidden" name="availabilityId" value="@availability.AvailabilityId" />
-                                                            <input type="hidden" name="tutorId" value="@Model.Tutor.TutorId" />
-                                                            <button type="submit" class="book-btn">Book</button>
-                                                        </form>
+                                                        <a href="/Student/BookTutor?availabilityId=@availability.AvailabilityId" class="book-btn">Book</a>
                                                     </td>
                                                 </tr>
                                             }

@@ -132,9 +132,16 @@ body {
   transition: background-color 0.15s ease-in-out;
 }
 
-.inputField:focus {
-  background-color: #e8eaed;
-  outline: 0;
+.inputField[readonly] {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.inputField[readonly]:focus {
+  background-color: #f8f9fa;
+  outline: none;
+  box-shadow: none;
 }
 
 .selectField {

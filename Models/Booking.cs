@@ -10,6 +10,8 @@ namespace CampusLearn.Models
         public string Location { get; set; } = "";
         public string BookingSummary { get; set; } = "";
         public DateTime DateBooked { get; set; }
-        public string Status { get; set; } = "";
+        public string Status { get; set; } = "Pending";
+        public string? Document1 { get; set; }
+        public string? Document2 { get; set; }
     }
 }

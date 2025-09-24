@@ -51,33 +51,18 @@
                     <form method="post" enctype="multipart/form-data" id="BookTutorForm">
                         <div class="formRow">
                             <div class="formFieldHalf">
-                                <label for="studentName" class="fieldLabel">Student Name</label>
+                                <label for="studentName" class="fieldLabel">Student Name <small class="text-muted">(from your profile)</small></label>
                                 <div class="input-control">
-                                    <input type="text" class="inputField" id="studentName" name="studentName">
+                                    <input type="text" class="inputField" id="studentName" name="studentName" 
+                                           value="@Model.StudentName" readonly>
                                     <div class="error"></div>
                                 </div>
                             </div>
                             <div class="formFieldHalf">
-                                <label for="studentEmail" class="fieldLabel">Email Address</label>
+                                <label for="studentEmail" class="fieldLabel">Email Address <small class="text-muted">(from your profile)</small></label>
                                 <div class="input-control">
-                                    <input type="email" class="inputField" id="studentEmail" name="studentEmail">
-                                    <div class="error"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="formRow">
-                            <div class="formFieldHalf">
-                                <label for="module" class="fieldLabel">Module</label>
-                                <div class="input-control">
-                                    <input type="text" class="inputField" id="module" name="module">
-                                    <div class="error"></div>
-                                </div>
-                            </div>
-                            <div class="formFieldHalf">
-                                <label for="preferredDate" class="fieldLabel">Preferred Date</label>
-                                <div class="input-control">
-                                    <input type="date" class="inputField" id="preferredDate" name="preferredDate">
+                                    <input type="email" class="inputField" id="studentEmail" name="studentEmail" 
+                                           value="@Model.StudentEmail" readonly>
                                     <div class="error"></div>
                                 </div>
                             </div>
@@ -85,20 +70,29 @@
                         
                         <div class="formRow">
                             <div class="formFieldHalf">
-                                <label for="preferredTime" class="fieldLabel">Preferred Time</label>
+                                <label for="module" class="fieldLabel">Module <small class="text-muted">(from tutor availability)</small></label>
                                 <div class="input-control">
-                                    <select class="selectField" id="preferredTime" name="preferredTime">
-                                        <option value="">Select time</option>
-                                        <option value="09:00">9:00 AM</option>
-                                        <option value="10:00">10:00 AM</option>
-                                        <option value="11:00">11:00 AM</option>
-                                        <option value="12:00">12:00 PM</option>
-                                        <option value="13:00">1:00 PM</option>
-                                        <option value="14:00">2:00 PM</option>
-                                        <option value="15:00">3:00 PM</option>
-                                        <option value="16:00">4:00 PM</option> 
-                                        <option value="17:00">5:00 PM</option>
-                                    </select>
+                                    <input type="text" class="inputField" id="module" name="module" 
+                                           value="@Model.Module" readonly>
+                                    <div class="error"></div>
+                                </div>
+                            </div>
+                            <div class="formFieldHalf">
+                                <label for="preferredDate" class="fieldLabel">Preferred Date <small class="text-muted">(from tutor availability)</small></label>
+                                <div class="input-control">
+                                    <input type="date" class="inputField" id="preferredDate" name="preferredDate" 
+                                           value="@Model.Availability?.Available.ToString("yyyy-MM-dd")" readonly>
+                                    <div class="error"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="formRow">
+                            <div class="formFieldHalf">
+                                <label for="preferredTime" class="fieldLabel">Preferred Time <small class="text-muted">(from tutor availability)</small></label>
+                                <div class="input-control">
+                                    <input type="text" class="inputField" id="preferredTime" name="preferredTime" 
+                                           value="@Model.Availability?.Available.ToString("HH:mm")" readonly>
                                     <div class="error"></div>
                                 </div>
                             </div>
