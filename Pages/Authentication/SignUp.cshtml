@@ -1,4 +1,74 @@
 ﻿@page
 @model CampusLearn.Pages.Authentication.SignUpModel
 @{
+    ViewData["Title"] = "Student Register";
 }
+
+@* SignUp Styles *@
+<link rel="stylesheet" href="~/css/SignUp.css" asp-append-version="true" />
+    <div class="register-container">
+        <h2>Create your student account</h2>
+        <form asp-action="Register" method="post">
+            <div class="form-group">
+                <label asp-for="FirstName">First Name*</label>
+                <input asp-for="FirstName" />
+                <span asp-validation-for="FirstName" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName">Last Name*</label>
+                <input asp-for="LastName" />
+                <span asp-validation-for="LastName" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email">Email*</label>
+                <input asp-for="Email" />
+                <span asp-validation-for="Email" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AcademicProgram">Academic Program*</label>
+                <select asp-for="AcademicProgram">
+                    <option value="">Select</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Business Administration">Business Administration</option>
+                    <option value="Arts and Humanities">Arts and Humanities</option>
+                </select>
+                <span asp-validation-for="AcademicProgram" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="YearOfStudy">Year of Study*</label>
+                <select asp-for="YearOfStudy">
+                    <option value="">Select</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                </select>
+                <span asp-validation-for="YearOfStudy" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Password*</label>
+                <input asp-for="Password" />
+                <span asp-validation-for="Password" class="validation-message"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm Password*</label>
+                <input asp-for="ConfirmPassword" />
+                <span asp-validation-for="ConfirmPassword" class="validation-message"></span>
+            </div>
+            <button type="submit" class="btn">Sign up</button>
+        </form>
+        <a href="/Account/Login" class="link">Have an account? Log In here.</a>
+
+        <footer>
+            <div class="info-section">
+                <h3>Visit Us</h3>
+                <p>Pretoria Campus</p>
+                <p>Kempton Park Campus</p>
+                <p>Stellenbosch</p>
+                <h3>Contact Us</h3>
+                <p>☎ 010 551 5382</p>
+                <p>✉ info@belgicumcampus.ac.za</p>
+            </div>
+        </footer>
+       
+    </div>
