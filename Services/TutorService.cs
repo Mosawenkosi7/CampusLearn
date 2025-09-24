@@ -49,6 +49,16 @@ namespace CampusLearn.Services
         }
 
         /// <summary>
+        /// Gets a specific availability by ID
+        /// </summary>
+        /// <param name="availabilityId">The availability ID</param>
+        /// <returns>TutorAvailabilityView or null if not found</returns>
+        public TutorAvailabilityView? GetAvailabilityById(int availabilityId)
+        {
+            return _tutorRepository.GetAvailabilityById(availabilityId);
+        }
+
+        /// <summary>
         /// Books an availability slot
         /// </summary>
         /// <param name="availabilityId">The availability slot ID</param>

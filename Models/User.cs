@@ -13,5 +13,6 @@ namespace CampusLearn.Models
         //full name
         // Computed property (read-only)
         public string FullName => FirstName + " " + LastName;
+        public DateTime? LastLogin { get; set; }
     }
 }

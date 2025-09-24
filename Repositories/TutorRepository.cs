@@ -192,6 +192,57 @@ namespace CampusLearn.Repositories
 
 
         /// <summary>
+        /// Gets a specific availability by ID with tutor and module details
+        /// </summary>
+        /// <param name="availabilityId">The availability ID</param>
+        /// <returns>TutorAvailabilityView or null if not found</returns>
+        public TutorAvailabilityView? GetAvailabilityById(int availabilityId)
+        {
+            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            {
+                connectDB.Open();
+
+                string query = @"
+                    SELECT ta.tutorAvailabilityId, ta.tutorId, ta.moduleCode, ta.available,
+                           m.moduleName,
+                           tp.academicAverage, tp.tutorSummary,
+                           u.firstName, u.lastName, u.email,
+                           CASE WHEN b.bookingId IS NOT NULL THEN 1 ELSE 0 END as isBooked
+                    FROM tutorAvailability ta
+                    INNER JOIN modules m ON ta.moduleCode = m.moduleCode
+                    INNER JOIN tutorProfile tp ON ta.tutorId = tp.tutorId
+                    INNER JOIN studentProfile sp ON tp.studentNumber = sp.studentNumber
+                    INNER JOIN users u ON sp.studentNumber = u.personnelNumber
+                    LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId AND b.status = 'Active'
+                    WHERE ta.tutorAvailabilityId = @availabilityId";
+
+                using (SqlCommand command = new SqlCommand(query, connectDB))
+                {
+                    command.Parameters.AddWithValue("@availabilityId", availabilityId);
+                    
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            var availableDateTime = reader.GetDateTime(3);
+                            return new TutorAvailabilityView
+                            {
+                                TutorAvailabilityId = reader.GetInt32(0),
+                                TutorId = reader.GetInt32(1),
+                                ModuleCode = reader.GetString(2),
+                                Available = availableDateTime,
+                                Location = "Online", // Default since location column doesn't exist in tutorAvailability
+                                IsActive = true, // Default since isActive column doesn't exist
+                                IsBooked = reader.GetInt32(10) == 1
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Books an availability slot for a student
         /// </summary>
         /// <param name="availabilityId">The availability slot ID</param>
