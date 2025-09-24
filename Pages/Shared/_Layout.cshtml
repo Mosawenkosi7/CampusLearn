@@ -43,10 +43,14 @@
                         // Context.Session.SetString("role", null);
                         //Context.Session.SetString("name", "Kele");
                         // Testing as a student
-                        Context.Session.SetString("personnelNumber", "ST12345678");
-                        Context.Session.SetString("name", "John Student");
+                        Context.Session.SetString("personnelNumber", "ST12345679");
+                        Context.Session.SetString("name", "Karabo");
                         Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
-                        Context.Session.SetString("role", "Student"); 
+                        Context.Session.SetString("role", "Student");
+
+                        // Context.Session.SetString("role", "student");
+                        // Context.Session.SetString("name", "Mosa");
+
                     }
 
 
@@ -67,7 +71,7 @@
                         @* test for students *@
 
 
-                        else if (Context.Session.GetString("role") == "student")
+                        else if (Context.Session.GetString("role") == "Student")
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
