@@ -4,53 +4,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CampusLearn.Pages
 {
-    public class ExtraCode
+   /*/ public class ExtraCode
     {
         // Updated mock database to store users by their email.
         public static class MockDatabase
         {
             public static Dictionary<string, User> Users = new Dictionary<string, User>();
-        }
-
-        // Updated ViewModel for the registration form with all new fields.
-        public class RegisterViewModel
-        {
-            [Required(ErrorMessage = "First Name is required.")]
-            public string FirstName { get; set; }
-
-            [Required(ErrorMessage = "Last Name is required.")]
-            public string LastName { get; set; }
-
-            [Required(ErrorMessage = "Email is required.")]
-            [EmailAddress(ErrorMessage = "Invalid email address.")]
-            public string Email { get; set; }
-
-            [Required(ErrorMessage = "Academic Program is required.")]
-            public string AcademicProgram { get; set; }
-
-            [Required(ErrorMessage = "Year of Study is required.")]
-            public string YearOfStudy { get; set; }
-
-            [Required(ErrorMessage = "Password is required.")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-
-            [Required(ErrorMessage = "Confirm Password is required.")]
-            [Compare("Password", ErrorMessage = "Passwords do not match.")]
-            [DataType(DataType.Password)]
-            public string ConfirmPassword { get; set; }
-        }
-
-        // Updated ViewModel for the login form to use Email instead of Username.
-        public class LoginViewModel
-        {
-            [Required(ErrorMessage = "Email is required.")]
-            [EmailAddress(ErrorMessage = "Invalid email address.")]
-            public string Email { get; set; }
-
-            [Required(ErrorMessage = "Password is required.")]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
         }
 
         public class AccountController : Controller
@@ -116,5 +75,5 @@ namespace CampusLearn.Pages
 }
     }
 }
-    }
+    }/*/
 }

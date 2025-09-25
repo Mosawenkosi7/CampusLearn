@@ -15,17 +15,21 @@ namespace CampusLearn.Pages.Authentication
         public string LastName { get; set; }
 
         [BindProperty]
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Cellphone Number is required.")]
+        public string CellphoneNumber { get; set; }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Personnel Number is required.")]
+        // Regular expression to enforce "AD" or "ST" prefix.
+        [RegularExpression(@"^(AD|ST)\d{4,}$", ErrorMessage = "Personnel Number must start with 'AD' or 'ST' followed by digits.")]
+        public string PersonnelNumber { get; set; }
+
+        [BindProperty]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
+        // Regular expression to validate email domain.
+        [RegularExpression(@"^[\w\.-]+@(student\.com|campus\.edu)$", ErrorMessage = "Email must end in @student.com or @campus.edu.")]
         public string Email { get; set; }
-
-        [BindProperty]
-        [Required]
-        public string AcademicProgram { get; set; }
-
-        [BindProperty]
-        [Required]
-        public string YearOfStudy { get; set; }
 
         [BindProperty]
         [Required]

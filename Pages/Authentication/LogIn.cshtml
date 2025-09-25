@@ -16,6 +16,12 @@
                 <span asp-validation-for="Email" class="validation-message"></span>
             </div>
 
+        <div class="form-group">
+            <label asp-for="PersonnelNumber">Personnel Number*</label>
+            <input asp-for="PersonnelNumber" />
+            <span asp-validation-for="PersonnelNumber" class="validation-message"></span>
+        </div>
+
             <div class="form-group">
                 <label asp-for="Password">Password</label>
                 <input asp-for="Password" />
@@ -24,20 +30,11 @@
 
             <div asp-validation-summary="ModelOnly" class="validation-message"></div>
 
-            <button type="submit" class="btn">Log in</button>
+            <button type="submit" class="Logbtn">Log in</button>
         </form>
         <div class="link-group">
-            <a href="#" class="link">Forgot password?</a>
-            <a href="/Account/Register" class="link">Don't have an account? Register</a>
-        </div>
-        <div class="info-section">
-            <h3>Visit Us</h3>
-            <p>Pretoria Campus</p>
-            <p>Kempton Park Campus</p>
-            <p>Stellenbosch</p>
-            <h3>Contact Us</h3>
-            <p>☎ 010 551 5382</p>
-            <p>✉ info@belgicumcampus.ac.za</p>
+            <a href="\Authentication\ForgotPassword" class="link">Forgot password?</a>
+        <h6>Don't have an account? <a href="\Authentication\SignUp" class="link">Register</a></h6>
         </div>
     </div>
 
