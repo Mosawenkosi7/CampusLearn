@@ -29,6 +29,7 @@
                         <li class="nav-item">
                         </li>
                         <li class="nav-item">
+                           
                             <a class="nav-link text-dark @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Student/Dashboard" ? "active" : "")" asp-area="" asp-page="/Student/Dashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
@@ -43,11 +44,12 @@
                         // Context.Session.SetString("role", null);
                         //Context.Session.SetString("name", "Kele");
                         // Testing as a student
-                        // Context.Session.SetString("personnelNumber", "ST12345679");
-                       
-                        Context.Session.SetString("name", "Karabo");
+                        Context.Session.SetString("personnelNumber", "ST12345680");
+                        Context.Session.SetString("name", "John Doe");
                         Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
                         Context.Session.SetString("role", "Student");
+                        
+
 
                         // Context.Session.SetString("role", "student");
                         // Context.Session.SetString("name", "Mosa");

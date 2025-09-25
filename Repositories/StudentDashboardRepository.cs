@@ -23,9 +23,10 @@ namespace CampusLearn.Repositories
                 connectDB.Open();
 
                 string query = @"
-                                SELECT b.bookingId,u.firstName,u.lastName,ta.moduleCode,b.dateBooked, b.status FROM booking AS b
+                                SELECT b.bookingId,u.firstName,u.lastName,ta.moduleCode,ta.available, b.status FROM booking AS b
                                 INNER JOIN tutorAvailability AS ta ON b.tutorAvailabilityId = ta.tutorAvailabilityId
-                                INNER JOIN users AS u ON u.personnelNumber = b.studentNumber
+                                INNER JOIN tutorProfile AS tp ON ta.tutorId = tp.tutorId
+                                INNER JOIN users AS u ON u.personnelNumber = tp.studentNumber
                                 WHERE b.studentNumber = @StudentId";
 
                 using (SqlCommand cmd = new SqlCommand(query, connectDB))
@@ -41,7 +42,7 @@ namespace CampusLearn.Repositories
                             appointmentTable.User.FirstName = read.GetString(1);
                             appointmentTable.User.LastName = read.GetString(2);
                             appointmentTable.TutorAvailability.ModuleCode = read.GetString(3);
-                            appointmentTable.Booking.DateBooked = read.GetDateTime(4); 
+                            appointmentTable.TutorAvailability.Available = read.GetDateTime(4); 
                             appointmentTable.Booking.Status = read.GetString(5);
                             appointments.Add(appointmentTable);
                         }
@@ -75,7 +76,6 @@ namespace CampusLearn.Repositories
                 }
             }
         }
-
 
 
         // method that calculates number of sessions booked per student
@@ -118,7 +118,7 @@ namespace CampusLearn.Repositories
                 string query = @"SELECT COUNT(*)
                                   FROM booking
                                   WHERE studentNumber = @StudentId
-                                  AND dateBooked >= GETDATE()";
+                                  AND status = 'Active'";
 
                 using (SqlCommand cmd = new SqlCommand(query, connectDB))
                 {
@@ -165,7 +165,79 @@ namespace CampusLearn.Repositories
             return totalBookedSessions;
         }
 
+        public int GetPendingSessions(string studentId)
+        {
+            int totalBookedSessions = 0;
 
+            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            {
+                connectDB.Open();
+
+                string query = @"SELECT COUNT(*)
+                                  FROM booking
+                                  WHERE studentNumber = @StudentId
+                                  AND status = 'Pending'";
+
+                using (SqlCommand cmd = new SqlCommand(query, connectDB))
+                {
+                    cmd.Parameters.AddWithValue("@StudentId", studentId);
+
+                    var result = cmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        totalBookedSessions = Convert.ToInt32(result);
+                    }
+                }
+            }
+
+            return totalBookedSessions;
+        }
+
+        public List<LearningResourceCard> GetLearningResources(string studentId)
+        {
+            List<LearningResourceCard> learningResourceCards = new List<LearningResourceCard>();
+            //CONNECT TO db
+            try
+            {
+                using (SqlConnection connectDB = new SqlConnection(_connectionString))
+                {
+                    connectDB.Open();
+
+                    //query to fetch resource card
+                    string query = @"
+                                    SELECT lr.resourceID,s.studentNumber,s.moduleCode,lr.topic,lr.description FROM subscription AS s 
+                                    INNER JOIN learningResources AS lr ON s.moduleCode = lr.moduleCode
+                                    WHERE s.studentNumber = @StudentId";
+
+                    //execute the query 
+                    using (SqlCommand cmd = new SqlCommand(query,connectDB))
+                    {
+                        cmd.Parameters.AddWithValue("@StudentId", studentId);
+                        //read each row and store in the list
+                        using (SqlDataReader read = cmd.ExecuteReader())
+                        {
+                            while (read.Read())
+                            {
+                                LearningResourceCard learningResourceCard = new LearningResourceCard();
+                                learningResourceCard.LearningResource.ResourceId = read.GetInt32(0);
+                                learningResourceCard.Subscription.StudentName = read.GetString(1);
+                                learningResourceCard.Subscription.ModuleCode = read.GetString(2);
+                                learningResourceCard.LearningResource.Topic = read.GetString(3);
+                                learningResourceCard.LearningResource.Description = read.GetString(4);
+
+                                learningResourceCards.Add(learningResourceCard);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return learningResourceCards;
+        }
     }
 
     public class AppointmentTable {
@@ -174,5 +246,11 @@ namespace CampusLearn.Repositories
         public User User { get; set; } = new User(); //get the tutor name
 
         public TutorAvailability TutorAvailability { get; set; } = new TutorAvailability(); //we want the module code
+    }
+
+    public class LearningResourceCard
+    {
+        public Subscription Subscription { get; set; } = new Subscription(); //store the student Number, ModuleCode
+        public LearningResource LearningResource { get; set; } = new LearningResource(); //store topic,description,resourceId
     }
 }

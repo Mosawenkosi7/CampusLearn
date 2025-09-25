@@ -49,7 +49,7 @@ namespace CampusLearn.Repositories
                     // Create booking record
                     string insertQuery = @"
                         INSERT INTO booking (studentNumber, tutorAvailabilityId, location, bookingSummary, document1, document2, dateBooked, status)
-                        VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE(), 'Active')";
+                        VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE(), 'Pending')";
                     
                     using (SqlCommand insertCommand = new SqlCommand(insertQuery, connectDB))
                     {

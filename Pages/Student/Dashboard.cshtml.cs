@@ -22,8 +22,9 @@ namespace CampusLearn.Pages.Student
         //Number of sessions booked 
         public int totalSessions { get; set; }
         public int totalUpcomingSessions { get; set; }
-
         public int completedSessions { get; set; }
+
+        public int pendingSessions { get; set; }
         //list to store bookings (paged)
         public List<AppointmentTable> appointmentTables = new List<AppointmentTable>();
 
@@ -37,14 +38,12 @@ namespace CampusLearn.Pages.Student
         //store the booking Id 
         [BindProperty]
         public Booking Booking {get;set;}
-      
-        
+
+        public List<LearningResourceCard> learningResources = new List<LearningResourceCard>();
 
         public void OnGet(int p = 1)
         {
-            
-            HttpContext.Session.SetString("studentId", "ST12345678");
-            var studentId = HttpContext.Session.GetString("studentId");
+            var studentId = HttpContext.Session.GetString("personnelNumber");
             if(string.IsNullOrEmpty(studentId))
             {
                 RedirectToPage("/Authentication/LogIn");
@@ -68,12 +67,17 @@ namespace CampusLearn.Pages.Student
                 .ToList();
 
 
+            learningResources = _studentDashboardService.GetLearningResources(studentId);
+
             //set the total sessions booked 
             totalSessions = _studentDashboardService.BookedSessionsCount(studentId);
 
             totalUpcomingSessions = _studentDashboardService.UpcomingSessionsCount(studentId);
 
             completedSessions = _studentDashboardService.CompletedSessions(studentId);
+
+            pendingSessions = _studentDashboardService.PendingSessionsCount(studentId);
+
         }
 
 
@@ -88,7 +92,6 @@ namespace CampusLearn.Pages.Student
             if (!success)
             {
                 ErrorMessage = "Appointment marked with Complete Can not be deleted";
-                Thread.Sleep(3000);
                 return RedirectToPage("/Student/Dashboard");
             }
 

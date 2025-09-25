@@ -19,16 +19,20 @@ namespace CampusLearn.Services
 
             var now = DateTime.Now;
             var upcoming = appointmentTables
-                .Where(a => a.Booking.DateBooked >= now)
-                .OrderBy(a => a.Booking.DateBooked);
+                .Where(a => a.TutorAvailability.Available >= now)
+                .OrderBy(a => a.TutorAvailability.Available);
 
             var past = appointmentTables
-                .Where(a => a.Booking.DateBooked < now)
-                .OrderByDescending(a => a.Booking.DateBooked);
+                .Where(a => a.TutorAvailability.Available < now)
+                .OrderByDescending(a => a.TutorAvailability.Available);
 
             return upcoming.Concat(past).ToList();
         }
 
+        public List<LearningResourceCard> GetLearningResources(string studentId)
+        {
+            return _studentDashboardRepository.GetLearningResources(studentId);
+        }
 
 
         //method that deletes row in database
@@ -66,6 +70,15 @@ namespace CampusLearn.Services
             int totalSessionsCount = 0;
 
             totalSessionsCount = _studentDashboardRepository.GetCompletedSessions(studentId);
+            return totalSessionsCount;
+        }
+
+        //method for counting pending sessions
+        public int PendingSessionsCount(string studentId)
+        {
+            int totalSessionsCount = 0;
+            totalSessionsCount = _studentDashboardRepository.GetPendingSessions(studentId);
+
             return totalSessionsCount;
         }
 

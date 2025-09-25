@@ -14,7 +14,7 @@
             </button>
 
             <!-- Centered heading -->
-            <h1 class="position-absolute start-50 translate-middle-x m-0 text-center">Student Schedule</h1>
+            <h1 class="position-absolute start-50 translate-middle-x m-0 text-center">Student Dashboard</h1>
         </div>
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -54,20 +54,22 @@
 </nav>
 
 @* message for canceling an appoinment  *@
-@if (!string.IsNullOrEmpty(Model.ErrorMessage))
-{
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-       @Model.ErrorMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-@if (!string.IsNullOrEmpty(Model.SuccessMessage))
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @Model.SuccessMessage
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+<div style="margin-top:30px">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
 
 
 
@@ -91,8 +93,21 @@
                 <tr>
                     <td>@item.User.FullName</td>
                     <td>@item.TutorAvailability.ModuleCode</td>
-                    <td>@item.Booking.DateBooked</td>
-                    <td>@item.Booking.Status</td>
+                    <td>@item.TutorAvailability.Available</td>
+                    <td>
+                        @{
+                            var status = item.Booking.Status?.ToLowerInvariant();
+                            var badge = status switch
+                            {
+                                "pending" => "warning",   // yellow
+                                "active" => "primary",    // blue
+                                "completed" => "success", // green
+                                "dropped" => "danger",  // red
+                                _ => "secondary"
+                            };
+                        }
+                        <span class="badge bg-@badge">@item.Booking.Status</span>
+                    </td>
                     <td>
                         <a href="/" class="btn btn-success">Visit</a>
                         <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#@modalId">
@@ -157,7 +172,7 @@
         <div class="d-flex  gap-3" >
             <i class="bi bi-calendar4" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px"> @Model.totalSessions</h4>
         </div>
-        <p>Sessions Booked</p>
+        <p>Booked Sessions</p>
     </div>
     <div style="border-right: 3px solid black; padding-right:35px">
         <div class="d-flex  gap-3">
@@ -165,20 +180,40 @@
         </div>
         <p>Upcoming Sessions</p>
     </div>
+    
     <div style="border-right: 3px solid black; padding-right:35px;">
+        <div class="d-flex  gap-3">
+            <i class="bi bi-hourglass" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px">@Model.pendingSessions</h4>
+        </div>
+        <p>Pending Sessions</p>
+    </div>
+
+    <div>
         <div class="d-flex  gap-3">
             <i class="bi bi-check2-square" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px">@Model.completedSessions</h4>
         </div>
-        <p>Sessions Completed</p>
-    </div>
-    <div>
-        <div class="d-flex  gap-3">
-            <i class="bi bi-people" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px"> 0</h4>
-        </div>
-        <p>Tutors Engaged</p>
+        <p>Completed Sessions</p>
     </div>
 </div>
 
 <div class="notifications">
 
+</div>
+
+<div class="learnig-resources">
+    <h2>Subscribed Topics</h2>
+     <div class="topics">
+        @foreach (var item in Model.learningResources)
+        {
+
+            <div>
+
+                <h3>@item.LearningResource.Topic</h3>
+                <p>@item.Subscription.ModuleCode</p>
+                <p>@item.LearningResource.Description</p>
+                <a href="/Student/TopicDiscussion?id=@item.LearningResource.ResourceId">View Resource</a>
+            </div>
+        }
+
+        </div>
 </div>
