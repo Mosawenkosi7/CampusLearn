@@ -29,6 +29,19 @@ namespace CampusLearn.Services
             return upcoming.Concat(past).ToList();
         }
 
+
+
+        //method that deletes row in database
+        public bool CancelQuery(int bookingId, string status) //returns true or false(
+        {
+            if (status == "Active" || status == "Pending")
+            {
+                _studentDashboardRepository.CancelBooking(bookingId);
+                return true;
+            }
+            return false;
+        }
+
         //create method that will count number of sessions booked
         public int BookedSessionsCount(string studentId)
         {

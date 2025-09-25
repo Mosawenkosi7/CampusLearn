@@ -53,6 +53,24 @@
     </div>
 </nav>
 
+@* message for canceling an appoinment  *@
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+       @Model.ErrorMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @Model.SuccessMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+
+
 <div class="bookings-table">
     <table class="table table-striped table-hover mt-5">
 
@@ -69,6 +87,7 @@
         <tbody>
             @foreach (var item in Model.appointmentTables)
             {
+                var modalId = $"cancelModal-{item.Booking.BookingId}";
                 <tr>
                     <td>@item.User.FullName</td>
                     <td>@item.TutorAvailability.ModuleCode</td>
@@ -76,31 +95,37 @@
                     <td>@item.Booking.Status</td>
                     <td>
                         <a href="/" class="btn btn-success">Visit</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#@modalId">
                             Cancel
-                        </button>
-                        @* Modal for editing *@
+                        </a>
+
                         <!-- Modal -->
-                        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal fade" id="@modalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Cancel @item.TutorAvailability.ModuleCode</h1>
+                                        <h1 class="modal-title fs-5">Cancel @item.TutorAvailability.ModuleCode</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <p>Are you sure you want to cancel this appointment?  </p>
+                                        <p>Are you sure you want to cancel this appointment?</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">Confirm</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <form method="post" asp-page-handler="CancelSession">
+
+                                            <input asp-for="Booking.Status" type="hidden" value="@item.Booking.Status" />
+                                            <input asp-for="Booking.BookingId" type="hidden" value="@item.Booking.BookingId" />
+                                            <button type="submit" class="btn btn-danger">Yes, Cancel</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
                     </td>
                 </tr>
             }
+
         </tbody>
     </table>
 

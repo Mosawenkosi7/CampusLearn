@@ -1,4 +1,5 @@
 using CampusLearn.Repositories;
+using CampusLearn.Models; 
 using CampusLearn.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,10 +32,17 @@ namespace CampusLearn.Pages.Student
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
 
+
+
+        //store the booking Id 
+        [BindProperty]
+        public Booking Booking {get;set;}
+      
         
 
         public void OnGet(int p = 1)
         {
+            
             HttpContext.Session.SetString("studentId", "ST12345678");
             var studentId = HttpContext.Session.GetString("studentId");
             if(string.IsNullOrEmpty(studentId))
@@ -68,6 +76,31 @@ namespace CampusLearn.Pages.Student
             completedSessions = _studentDashboardService.CompletedSessions(studentId);
         }
 
-      
+
+        [TempData]
+        public string? ErrorMessage { get; set; }
+
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        public IActionResult OnPostCancelSession()
+        {
+            bool success = _studentDashboardService.CancelQuery(Booking.BookingId, Booking.Status);
+            if (!success)
+            {
+                ErrorMessage = "Appointment marked with Complete Can not be deleted";
+                Thread.Sleep(3000);
+                return RedirectToPage("/Student/Dashboard");
+            }
+
+            SuccessMessage = "Appointment successfully cancelled";
+            return RedirectToPage("/Student/Dashboard");
+
+        }
+
+
+
     }
+
+
+    
 }

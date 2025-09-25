@@ -23,10 +23,10 @@ namespace CampusLearn.Repositories
                 connectDB.Open();
 
                 string query = @"
-                                SELECT u.firstName,u.lastName,ta.moduleCode,b.dateBooked, b.status FROM booking AS b
+                                SELECT b.bookingId,u.firstName,u.lastName,ta.moduleCode,b.dateBooked, b.status FROM booking AS b
                                 INNER JOIN tutorAvailability AS ta ON b.tutorAvailabilityId = ta.tutorAvailabilityId
                                 INNER JOIN users AS u ON u.personnelNumber = b.studentNumber
-                                WHERE studentNumber = @StudentId";
+                                WHERE b.studentNumber = @StudentId";
 
                 using (SqlCommand cmd = new SqlCommand(query, connectDB))
                 {
@@ -37,11 +37,12 @@ namespace CampusLearn.Repositories
                         while (read.Read())
                         {
                             AppointmentTable appointmentTable = new AppointmentTable();
-                            appointmentTable.User.FirstName = read.GetString(0);
-                            appointmentTable.User.LastName = read.GetString(1);
-                            appointmentTable.TutorAvailability.ModuleCode = read.GetString(2);
-                            appointmentTable.TutorAvailability.Available = read.GetDateTime(3);
-                            appointmentTable.Booking.Status = read.GetString(4);
+                            appointmentTable.Booking.BookingId = read.GetInt32(0);
+                            appointmentTable.User.FirstName = read.GetString(1);
+                            appointmentTable.User.LastName = read.GetString(2);
+                            appointmentTable.TutorAvailability.ModuleCode = read.GetString(3);
+                            appointmentTable.Booking.DateBooked = read.GetDateTime(4); 
+                            appointmentTable.Booking.Status = read.GetString(5);
                             appointments.Add(appointmentTable);
                         }
                     }
@@ -49,6 +50,30 @@ namespace CampusLearn.Repositories
             }
 
             return appointments;
+        }
+
+
+        //method that will cancel a booking
+        public void CancelBooking(int bookingId)
+        {
+            //conncect to database
+            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            {
+                //open the connection
+                connectDB.Open();
+
+                //query to delete the booking
+                string deleteQuery = @"
+                                        DELETE FROM booking
+                                        WHERE bookingId = @BookingId";
+
+                //execute the query 
+                using (SqlCommand cmd = new SqlCommand(deleteQuery, connectDB))
+                {
+                    cmd.Parameters.AddWithValue("@BookingId", bookingId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
 
@@ -144,7 +169,7 @@ namespace CampusLearn.Repositories
     }
 
     public class AppointmentTable {
-        public Booking Booking { get; set; } = new Booking(); //i need date booked, status
+        public Booking Booking { get; set; } = new Booking(); //i need date booked, status, bookingId
 
         public User User { get; set; } = new User(); //get the tutor name
 
