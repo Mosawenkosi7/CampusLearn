@@ -25,41 +25,52 @@ namespace CampusLearn.Repositories
         public bool CreateBooking(int availabilityId, string studentNumber, string location, 
                                  string bookingSummary, string? document1 = null, string? document2 = null)
         {
-            using (SqlConnection connectDB = new SqlConnection(_connectionString))
+            try
             {
-                connectDB.Open();
-                
-                // Check if availability exists and is not already booked
-                string checkQuery = @"
-                    SELECT COUNT(*) FROM tutorAvailability ta
-                    LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId AND b.status = 'Active'
-                    WHERE ta.tutorAvailabilityId = @availabilityId AND b.bookingId IS NULL";
-                
-                using (SqlCommand checkCommand = new SqlCommand(checkQuery, connectDB))
+                using (SqlConnection connectDB = new SqlConnection(_connectionString))
                 {
-                    checkCommand.Parameters.AddWithValue("@availabilityId", availabilityId);
-                    int availableCount = (int)checkCommand.ExecuteScalar();
+                    connectDB.Open();
                     
-                    if (availableCount == 0)
-                        return false;
-                }
-                
-                // Create booking record
-                string insertQuery = @"
-                    INSERT INTO booking (studentNumber, tutorAvailabilityId, location, bookingSummary, document1, document2, dateBooked, status)
-                    VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE(), 'Active')";
-                
-                using (SqlCommand insertCommand = new SqlCommand(insertQuery, connectDB))
-                {
-                    insertCommand.Parameters.AddWithValue("@studentNumber", studentNumber);
-                    insertCommand.Parameters.AddWithValue("@availabilityId", availabilityId);
-                    insertCommand.Parameters.AddWithValue("@location", location);
-                    insertCommand.Parameters.AddWithValue("@bookingSummary", bookingSummary);
-                    insertCommand.Parameters.AddWithValue("@document1", document1 ?? (object)DBNull.Value);
-                    insertCommand.Parameters.AddWithValue("@document2", document2 ?? (object)DBNull.Value);
+                    // Check if availability exists and is not already booked
+                    string checkQuery = @"
+                        SELECT COUNT(*) FROM tutorAvailability ta
+                        LEFT JOIN booking b ON ta.tutorAvailabilityId = b.tutorAvailabilityId AND b.status = 'Active'
+                        WHERE ta.tutorAvailabilityId = @availabilityId AND b.bookingId IS NULL";
                     
-                    return insertCommand.ExecuteNonQuery() > 0;
+                    using (SqlCommand checkCommand = new SqlCommand(checkQuery, connectDB))
+                    {
+                        checkCommand.Parameters.AddWithValue("@availabilityId", availabilityId);
+                        int availableCount = (int)checkCommand.ExecuteScalar();
+                        
+                        if (availableCount == 0)
+                            return false;
+                    }
+                    
+                    // Create booking record
+                    string insertQuery = @"
+                        INSERT INTO booking (studentNumber, tutorAvailabilityId, location, bookingSummary, document1, document2, dateBooked, status)
+                        VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE(), 'Active')";
+                    
+                    using (SqlCommand insertCommand = new SqlCommand(insertQuery, connectDB))
+                    {
+                        insertCommand.Parameters.AddWithValue("@studentNumber", studentNumber);
+                        insertCommand.Parameters.AddWithValue("@availabilityId", availabilityId);
+                        insertCommand.Parameters.AddWithValue("@location", location);
+                        insertCommand.Parameters.AddWithValue("@bookingSummary", bookingSummary);
+                        insertCommand.Parameters.AddWithValue("@document1", document1 ?? (object)DBNull.Value);
+                        insertCommand.Parameters.AddWithValue("@document2", document2 ?? (object)DBNull.Value);
+                        
+                        int rowsAffected = insertCommand.ExecuteNonQuery();
+                        
+                        bool success = rowsAffected > 0;
+                        return success;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Repository exception: {ex.Message}");
+                return false;
             }
         }
         
