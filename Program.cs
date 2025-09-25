@@ -8,11 +8,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddScoped< CampusLearn.Repositories.TutorRepository>();
 builder.Services.AddScoped<CampusLearn.Repositories.BookTutorRepository>();
 
+builder.Services.AddScoped<CampusLearn.Repositories.StudentDashboardRepository>();
 
 
 //-------------------------------end of adding the repository here
-
-
 
 
 
@@ -20,6 +19,7 @@ builder.Services.AddScoped<CampusLearn.Repositories.BookTutorRepository>();
 builder.Services.AddScoped< CampusLearn.Services.TutorService>();
 builder.Services.AddScoped<CampusLearn.Services.BookTutorService>();
 
+builder.Services.AddScoped<CampusLearn.Services.StudentDashboardService>();
 
 
 

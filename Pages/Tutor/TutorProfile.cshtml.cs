@@ -17,20 +17,20 @@ namespace CampusLearn.Pages.Tutor
         public TutorCard? Tutor { get; set; }
         public List<TutorAvailabilityView> Availabilities { get; set; } = new List<TutorAvailabilityView>();
 
-        public IActionResult OnGet(int? tutorid)
+        public IActionResult OnGet(int? tutorId)
         {
-            if (tutorid == null)
+            if (tutorId == null)
             {
                 return NotFound();
             }
 
-            Tutor = _tutorService.GetTutorProfile(tutorid.Value);
+            Tutor = _tutorService.GetTutorProfile(tutorId.Value);
             if (Tutor == null)
             {
                 return NotFound();
             }
 
-            Availabilities = _tutorService.GetTutorAvailability(tutorid.Value);
+            Availabilities = _tutorService.GetTutorAvailability(tutorId.Value);
             return Page();
         }
 
