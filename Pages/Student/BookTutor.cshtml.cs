@@ -34,9 +34,6 @@ namespace CampusLearn.Pages.Student
         public TimeSpan PreferredTime { get; set; }
         
         [BindProperty]
-        public string PreferredTimeString { get; set; } = "";
-        
-        [BindProperty]
         public string SessionDuration { get; set; } = "";
         
         [BindProperty]
@@ -101,7 +98,6 @@ namespace CampusLearn.Pages.Student
             Module = Availability.ModuleCode;
             PreferredDate = Availability.Available.Date; // Extract date from DATETIME
             PreferredTime = Availability.Available.TimeOfDay; // Extract time from DATETIME
-            PreferredTimeString = Availability.Available.ToString("HH:mm"); // Format as HH:mm
             
             return Page();
         }
@@ -121,6 +117,7 @@ namespace CampusLearn.Pages.Student
             
             // Get logged-in student's personnel number
             var personnelNumber = HttpContext.Session.GetString("personnelNumber");
+            
             if (string.IsNullOrEmpty(personnelNumber))
             {
                 TempData["Error"] = "Please log in to complete the booking.";
@@ -155,8 +152,9 @@ namespace CampusLearn.Pages.Student
                 
                 if (success)
                 {
-                    TempData["Message"] = "Booking created successfully! You will receive a confirmation email shortly.";
-                    return RedirectToPage("/Student/Dashboard");
+                    TempData["Message"] = "Booking created successfully!";
+                    // Stay on the same page to show the success message
+                    return Page();
                 }
                 else
                 {

@@ -6,6 +6,26 @@
 
 @* BookTutor Page Styles *@
 <link rel="stylesheet" href="~/css/booktutor.css" asp-append-version="true" />
+
+<!-- TempData Messages -->
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        @TempData["Message"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="mainContainer">
     <!-- Book a Session Heading -->
     <div class="headingSection">
@@ -49,6 +69,9 @@
                 </div>
                 <div class="card-body">
                     <form method="post" enctype="multipart/form-data" id="BookTutorForm">
+                        <!-- Hidden field to pass AvailabilityId -->
+                        <input type="hidden" name="AvailabilityId" value="@Model.AvailabilityId" />
+                        
                         <div class="formRow">
                             <div class="formFieldHalf">
                                 <label for="studentName" class="fieldLabel">Student Name <small class="text-muted">(from your profile)</small></label>
@@ -104,6 +127,7 @@
                                         <option value="15">15 minutes</option>
                                         <option value="30">30 minutes</option>
                                         <option value="45">45 minutes</option>
+                                        <option value="60">1 hour</option>
                                     </select>
                                     <div class="error"></div>
                                 </div>
@@ -164,7 +188,7 @@
                         
                         <div class="termsAgreementContainer">
                             <div class="input-control">
-                                <input type="checkbox" class="termsCheckbox" id="agreeTerms" name="agreeTerms">
+                                <input type="checkbox" class="termsCheckbox" id="agreeTerms" name="agreeTerms" value="true">
                                 <label class="termsAgreementLabel" for="agreeTerms">
                                     I agree with the terms and conditions
                                 </label>

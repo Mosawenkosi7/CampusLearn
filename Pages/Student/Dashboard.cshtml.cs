@@ -35,7 +35,7 @@ namespace CampusLearn.Pages.Student
 
         public void OnGet(int p = 1)
         {
-            HttpContext.Session.SetString("role", "student");
+            HttpContext.Session.SetString("role", "Student");
             HttpContext.Session.SetString("studentId", "ST12345678");
             var studentId = HttpContext.Session.GetString("studentId");
             if(string.IsNullOrEmpty(studentId))
