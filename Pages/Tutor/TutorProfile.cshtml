@@ -1,4 +1,255 @@
 ﻿@page
 @model CampusLearn.Pages.Tutor.TutorProfileModel
 @{
+    ViewData["Title"] = "Tutor Profile";
 }
+
+<style>
+    .tutor-profile-container {
+        background-color: #f8f9fa;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+    
+    .profile-header {
+        background-color: white;
+        border-radius: 10px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .profile-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid #e9ecef;
+    }
+    
+    .profile-placeholder {
+        width: 120px;
+        height: 120px;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+    }
+    
+    .bio-box {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        background-color: #fff;
+        min-height: 120px;
+    }
+    
+    .availability-section {
+        background-color: white;
+        border-radius: 10px;
+        padding: 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .availability-header {
+        background-color: #e9ecef;
+        padding: 15px 20px;
+        border-radius: 10px 10px 0 0;
+        margin: 0;
+    }
+    
+    .availability-table {
+        margin: 0;
+    }
+    
+    .availability-table th {
+        background-color: #f8f9fa;
+        border: none;
+        padding: 12px 15px;
+        font-weight: 600;
+        color: #495057;
+    }
+    
+    .availability-table td {
+        padding: 12px 15px;
+        border-top: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+    
+    .book-btn {
+        background-color: #e91e63;
+        color: white;
+        border: none;
+        padding: 6px 20px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .book-btn:hover {
+        background-color: #c2185b;
+        transform: translateY(-1px);
+    }
+    
+    .nav-buttons {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .nav-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+    
+    .nav-btn:hover {
+        background-color: #5a6268;
+        color: white;
+        text-decoration: none;
+    }
+    
+
+    
+
+    
+    .social-icons a {
+        color: #bdc3c7;
+        font-size: 24px;
+        margin-right: 15px;
+        transition: color 0.3s;
+    }
+    
+    .social-icons a:hover {
+        color: white;
+    }
+    
+
+</style>
+
+<div class="tutor-profile-container">
+    <div class="container">
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["Message"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (Model.Tutor != null)
+        {
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="row align-items-center mb-4">
+                    <div class="col-md-8">
+                        <h1 class="mb-3">Connect With @Model.Tutor.FullName</h1>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-2"><strong>Year of study:</strong> @Model.Tutor.YearsOfStudy</p>
+                                <p class="mb-0"><strong>Course:</strong> @Model.Tutor.Program</p>
+                            </div>
+                        </div>
+                    </div>
+         
+                </div>
+
+                <!-- Profile Content -->
+                <div class="row">
+                    <!-- Left Column - Profile Image and Bio -->
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-4">
+                                @if (!string.IsNullOrEmpty(Model.Tutor.ProfilePicture))
+                                {
+                                    <img src="/Media/tutors/@Model.Tutor.ProfilePicture" alt="@Model.Tutor.FullName" class="profile-image">
+                                }
+                                else
+                                {
+                                    <div class="profile-placeholder">
+                                        <i class="bi bi-person" style="font-size: 40px; color: #6c757d;"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-8">
+                                <div class="bio-box">
+                                    <p class="mb-0">@Model.Tutor.Bio</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Availability -->
+                    <div class="col-md-6">
+                        <div class="availability-section">
+                            <div class="availability-header">
+                                <h4 class="mb-0 text-center">Availability</h4>
+                            </div>
+                            <div class="table-responsive">
+                                @if (Model.Availabilities.Any(a => !a.IsBooked))
+                                {
+                                    <table class="table availability-table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Module</th>
+                                                <th>Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var availability in Model.Availabilities.Where(a => !a.IsBooked))
+                                            {
+                                                <tr>
+                                                    <td><strong>@availability.Module</strong></td>
+                                                    <td>
+                                                        @availability.AvailableDate.ToString("dd/MM/yyyy")<br>
+                                                        <small class="text-muted">@availability.StartTime.ToString(@"hh\:mm")</small>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/Student/BookTutor?availabilityId=@availability.AvailabilityId" class="book-btn">Book</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <div class="p-4 text-center">
+                                        <p class="text-muted mb-0">No availability slots at the moment.</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning" role="alert">
+                <h4 class="alert-heading">Tutor Not Found</h4>
+                <p>The requested tutor profile could not be found.</p>
+                <hr>
+                <p class="mb-0"><a href="/" class="btn btn-primary">Back to Home</a></p>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Footer -->

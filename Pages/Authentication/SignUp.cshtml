@@ -7,48 +7,109 @@
 @* SignUp Styles *@
 <link rel="stylesheet" href="~/css/SignUp.css" asp-append-version="true" />
 
-<body>
-    <div class="register-container">
-        <h2>Create your student account</h2>
-        <form asp-action="Register" method="post">
-            <div class="form-group">
-                <label asp-for="FirstName">First Name*</label>
-                <input asp-for="FirstName" />
-                <span asp-validation-for="FirstName" class="validation-message"></span>
+<div class="signup-container mb-4">
+    <div class="row g-0 min-vh-100">
+        <!-- Left Side - Image -->
+        <div class="col-lg-6 col-md-6">
+            <div class="image-section">
+                <div class="image-content">
+                    <img src="/Media/common/student.png" alt="Student Registration" class="signup-image" />
+                    <div class="image-overlay">
+                        <h2 style="color:black">Join CampusLearn™</h2>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="LastName">Last Name*</label>
-                <input asp-for="LastName" />
-                <span asp-validation-for="LastName" class="validation-message"></span>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="col-lg-6 col-md-6">
+            <div class="form-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h1>Create Your Profile</h1>
+                        <p class="text-muted">Start your learning journey today</p>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @Model.SuccessMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+
+                    <form method="post" class="signup-form">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">First Name *</label>
+                                    <input type="text" class="form-control" asp-for="FirstName" >
+                                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label">Last Name *</label>
+                                    <input type="text" class="form-control" asp-for="LastName">
+                                    <span asp-validation-for="LastName" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Personnel Number *</label>
+                            <input type="text" class="form-control" asp-for="PersonnelNumber">
+                            <span asp-validation-for="PersonnelNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label  class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" asp-for="Email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" asp-for="PhoneNumber">
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Password *</label>
+                                    <input type="password" class="form-control" asp-for="Password">
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                                    <input type="password" class="form-control" asp-for="ConfirmPassword">
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                      
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">Create Account</button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-0">Already have an account? <a href="/Authentication/LogIn" class="text-primary fw-bold">Sign In</a></p>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="PersonnelNumber">Personnel Number*</label>
-                <input asp-for="PersonnelNumber" />
-                <span asp-validation-for="PersonnelNumber" class="validation-message"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CellphoneNumber">Cellphone Number*</label>
-                <input asp-for="CellphoneNumber" />
-                <span asp-validation-for="CellphoneNumber" class="validation-message"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email">Email*</label>
-                <input asp-for="Email" />
-                <span asp-validation-for="Email" class="validation-message"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password">Password*</label>
-                <input asp-for="Password" />
-                <span asp-validation-for="Password" class="validation-message"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ConfirmPassword">Confirm Password*</label>
-                <input asp-for="ConfirmPassword" />
-                <span asp-validation-for="ConfirmPassword" class="validation-message"></span>
-            </div>
-            <button type="submit" class="Reg">Sign up</button>
-        </form>
-        <h6>Have an account? <a href="/Authentication/LogIn" class="link">Log In here.</a></h6>
+        </div>
     </div>
-</body>
-   
+</div>
+

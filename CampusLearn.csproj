@@ -11,4 +11,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Media\BookTutorResources\" />
+  </ItemGroup>
+
 </Project>

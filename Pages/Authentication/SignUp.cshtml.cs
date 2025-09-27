@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using CampusLearn.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -6,54 +7,98 @@ namespace CampusLearn.Pages.Authentication
 {
     public class SignUpModel : PageModel
     {
-        [BindProperty]
-        [Required]
-        public string FirstName { get; set; }
+
+        private readonly AuthenticationServices _authService;
+
+        public SignUpModel(AuthenticationServices authentication)
+        {
+            _authService = authentication;
+        }
+
+
 
         [BindProperty]
-        [Required]
-        public string LastName { get; set; }
+        [Required(ErrorMessage = "First Name is Required")]
+        public string FirstName { get; set; } = "";
+
+        [BindProperty]
+        [Required(ErrorMessage = "Last Name is Required")]
+        public string LastName { get; set; } = "";
 
         [BindProperty]
         [Required(ErrorMessage = "Cellphone Number is required.")]
-        public string CellphoneNumber { get; set; }
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Cellphone number must be 10 digits.")]
+        public string PhoneNumber { get; set; } = "";
 
         [BindProperty]
         [Required(ErrorMessage = "Personnel Number is required.")]
-        // Regular expression to enforce "AD" or "ST" prefix.
-        [RegularExpression(@"^(AD|ST)\d{4,}$", ErrorMessage = "Personnel Number must start with 'AD' or 'ST' followed by digits.")]
-        public string PersonnelNumber { get; set; }
+        [StringLength(10, MinimumLength = 6, ErrorMessage = "Personnel Number must be at least 6 digits.")]
+        public string PersonnelNumber { get; set; } = "";
 
         [BindProperty]
         [Required(ErrorMessage = "Email is required.")]
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         // Regular expression to validate email domain.
-        [RegularExpression(@"^[\w\.-]+@(student\.com|campus\.edu)$", ErrorMessage = "Email must end in @student.com or @campus.edu.")]
-        public string Email { get; set; }
+        [RegularExpression(@".+@belgiumcampus\.ac\.za$", ErrorMessage = "Email must end with @belgiumcampus.ac.za.")]
+        public string Email { get; set; } = "";
 
         [BindProperty]
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string Password { get; set; } = "";
 
         [BindProperty]
-        [Required]
+        [Required(ErrorMessage = "Password must be confirmed")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; } = "";
 
         public void OnGet()
         {
         }
 
-        public IActionResult OnPostRegister()
+        public string ErrorMessage { get; set; } = "";  
+
+        public string SuccessMessage { get; set; } = "";
+
+        public void OnPost()
         {
             if (!ModelState.IsValid)
             {
-                return Page();
+                ErrorMessage = "Please correct the errors in the form."; //check if required fields are filled
+                return;
             }
-            // Registration logic here
-            return RedirectToPage("/Index");
+
+            try
+            {
+                Console.WriteLine($"SignUp: Attempting to create user - Email: {Email}, PersonnelNumber: {PersonnelNumber}");
+                bool addNewUser = _authService.AddNewUser(PersonnelNumber, Email, Password, FirstName, LastName, PhoneNumber);
+                Console.WriteLine($"SignUp: Service returned: {addNewUser}");
+
+                if (addNewUser)
+                {
+                    SuccessMessage = "Profile has been created successfully!";
+                    Console.WriteLine($"SignUp: User created successfully");
+                    // Clear form fields after successful registration
+                    FirstName = "";
+                    LastName = "";
+                    PersonnelNumber = "";
+                    Email = "";
+                    PhoneNumber = "";
+                    Password = "";
+                    ConfirmPassword = "";
+                }
+                else
+                {
+                    ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
+                    Console.WriteLine($"SignUp: User creation failed - validation error");
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = "An error occurred while creating your account. Please try again.";
+                Console.WriteLine($"SignUp error: {ex.Message}");
+            }
         }
     }
 }
