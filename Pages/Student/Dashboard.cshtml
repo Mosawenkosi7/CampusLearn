@@ -19,29 +19,33 @@
 
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CampusLearn</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" href="/">Home</a>
+                        <hr  style="border:2px solid blue"/>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Tutor/AllTutors">View Tutors</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
+                        <a class="nav-link" href="/Communication/Forum">Public Forum</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Communication/PrivateMessaging">Private Messages</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Communication/Notification">Notifications</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Authentication/ManageAccount">Manage Account</a>
                     </li>
                 </ul>
                 <form class="d-flex mt-3" role="search">
@@ -205,15 +209,49 @@
      <div class="topics">
         @foreach (var item in Model.learningResources)
         {
-
             <div>
-
                 <h3>@item.LearningResource.Topic</h3>
                 <p>@item.Subscription.ModuleCode</p>
                 <p>@item.LearningResource.Description</p>
                 <a href="/Student/TopicDiscussion?id=@item.LearningResource.ResourceId">View Resource</a>
             </div>
         }
+    </div>
 
+    @* Learning Resources Pagination *@
+    @if (Model.LearningResourcesTotalPages > 1)
+    {
+        <div class="pagination-numbers" style="text-align: center; margin-top: 20px;">
+            @for (int i = 1; i <= Model.LearningResourcesTotalPages; i++)
+            {
+                if (i == Model.LearningResourcesCurrentPage)
+                {
+                    <span class="page-number current" style="
+                        display: inline-block;
+                        padding: 8px 12px;
+                        margin: 0 4px;
+                        background-color: #007bff;
+                        color: white;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        font-weight: bold;
+                    ">@i</span>
+                }
+                else
+                {
+                    <a href="/Student/Dashboard?p=@Model.CurrentPage&lr=@i" class="page-number" style="
+                        display: inline-block;
+                        padding: 8px 12px;
+                        margin: 0 4px;
+                        background-color: #f8f9fa;
+                        color: #007bff;
+                        border: 1px solid #dee2e6;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        transition: all 0.2s;
+                    ">@i</a>
+                }
+            }
         </div>
+    }
 </div>

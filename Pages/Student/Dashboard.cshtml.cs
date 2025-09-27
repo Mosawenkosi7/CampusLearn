@@ -41,7 +41,12 @@ namespace CampusLearn.Pages.Student
 
         public List<LearningResourceCard> learningResources = new List<LearningResourceCard>();
 
-        public void OnGet(int p = 1)
+        // Learning resources pagination
+        public int LearningResourcesPageSize { get; } = 3;
+        public int LearningResourcesCurrentPage { get; set; }
+        public int LearningResourcesTotalPages { get; set; }
+
+        public void OnGet(int p = 1, int lr = 1)
         {
             var studentId = HttpContext.Session.GetString("personnelNumber");
             if(string.IsNullOrEmpty(studentId))
@@ -67,7 +72,19 @@ namespace CampusLearn.Pages.Student
                 .ToList();
 
 
-            learningResources = _studentDashboardService.GetLearningResources(studentId);
+            // Learning resources pagination
+            var allLearningResources = _studentDashboardService.GetLearningResources(studentId);
+            LearningResourcesCurrentPage = lr < 1 ? 1 : lr;
+            LearningResourcesTotalPages = (int)Math.Ceiling(allLearningResources.Count / (double)LearningResourcesPageSize);
+            if (LearningResourcesCurrentPage > LearningResourcesTotalPages && LearningResourcesTotalPages > 0)
+            {
+                LearningResourcesCurrentPage = LearningResourcesTotalPages;
+            }
+
+            learningResources = allLearningResources
+                .Skip((LearningResourcesCurrentPage - 1) * LearningResourcesPageSize)
+                .Take(LearningResourcesPageSize)
+                .ToList();
 
             //set the total sessions booked 
             totalSessions = _studentDashboardService.BookedSessionsCount(studentId);
