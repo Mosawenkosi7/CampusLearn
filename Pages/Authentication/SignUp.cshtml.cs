@@ -61,43 +61,27 @@ namespace CampusLearn.Pages.Authentication
 
         public string SuccessMessage { get; set; } = "";
 
-        public void OnPost()
+        public IActionResult OnPost()
         {
             if (!ModelState.IsValid)
             {
                 ErrorMessage = "Please correct the errors in the form."; //check if required fields are filled
-                return;
+                return Page();
             }
 
-            try
-            {
-                Console.WriteLine($"SignUp: Attempting to create user - Email: {Email}, PersonnelNumber: {PersonnelNumber}");
-                bool addNewUser = _authService.AddNewUser(PersonnelNumber, Email, Password, FirstName, LastName, PhoneNumber);
-                Console.WriteLine($"SignUp: Service returned: {addNewUser}");
 
-                if (addNewUser)
-                {
-                    SuccessMessage = "Profile has been created successfully!";
-                    Console.WriteLine($"SignUp: User created successfully");
-                    // Clear form fields after successful registration
-                    FirstName = "";
-                    LastName = "";
-                    PersonnelNumber = "";
-                    Email = "";
-                    PhoneNumber = "";
-                    Password = "";
-                    ConfirmPassword = "";
-                }
-                else
-                {
-                    ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
-                    Console.WriteLine($"SignUp: User creation failed - validation error");
-                }
-            }
-            catch (Exception ex)
+            bool addNewUser = _authService.AddNewUser(PersonnelNumber, Email, Password, FirstName, LastName, PhoneNumber);
+
+            if (addNewUser)
             {
-                ErrorMessage = "An error occurred while creating your account. Please try again.";
-                Console.WriteLine($"SignUp error: {ex.Message}");
+                SuccessMessage = "Profile has been created successfully!";
+                return RedirectToPage("/Authentication/LogIn");
+                
+            }
+            else
+            {
+                ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
+                return RedirectToPage("/Authentication/SignUp");
             }
         }
     }
