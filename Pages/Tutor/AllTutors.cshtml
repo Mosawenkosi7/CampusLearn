@@ -3,8 +3,9 @@
 @{
 }
 
+
 <div class="container py-4">
-    <h2 class="mb-4">Mett all our Tutors here at CampuslEARN</h2>
+    <h2 class="mb-4">Meet all our Tutors here at CampusLearn</h2>
     <form method="get" class="row g-3 mb-4">
         <div class="col-md-4">
             <input name="Search" value="@Model.Search" class="form-control" placeholder="Search tutor by name" />
@@ -23,18 +24,23 @@
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
         @foreach (var t in Model.Tutors.Items)
         {
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="@t.ProfilePicture" class="card-img-top" alt="@t.FullName" onerror="this.src='/Media/tutors/tutor1.jpg'">
-                    <div class="card-body">
-                        <h5 class="card-title mb-1">@t.FullName</h5>
-                        <div class="text-muted small">Year of study: @t.YearsOfStudy • @t.Program</div>
-                        <div class="mt-2">
-                            <span class="badge bg-success">Avg: @t.AverageGrade</span>
-                            <span class="badge bg-info">@t.Program</span>
+            <div class="col"> 
+                <a href="/Tutor/TutorProfile?tutorId=@t.TutorId" class="text-decoration-none"> @* //clickable card part incase anyone needs it or needs to change anything *@
+                    <div class="card h-100 shadow-sm tutor-card">
+                        <img src="@t.ProfilePicture" class="card-img-top" alt="@t.FullName" onerror="this.src='/Media/tutors/tutor1.jpg'">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">@t.FullName</h5>
+                            <div class="text-muted small">Year of study: @t.YearsOfStudy • @t.Program</div>
+                            <div class="mt-2">
+                                <span class="badge bg-success">Avg: @t.AverageGrade</span>
+                                @foreach (var module in t.Modules)
+                                {
+                                    <span class="badge bg-secondary">@module</span>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>

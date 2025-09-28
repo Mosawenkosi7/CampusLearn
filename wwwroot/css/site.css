@@ -91,3 +91,31 @@ footer {
     max-height: 100%;
     object-fit: contain;
 }
+
+.tutor-card {
+    max-width: 250px;
+    transition: transform 0.2s;
+}
+
+    .tutor-card:hover {
+        transform: translateY(-5px);
+        cursor: pointer;
+    }
+
+.card-img-top {
+    height: 150px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.1rem;
+}
+
+.badge {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
