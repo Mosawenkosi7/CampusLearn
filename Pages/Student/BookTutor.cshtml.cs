@@ -65,7 +65,7 @@ namespace CampusLearn.Pages.Student
             
             if (string.IsNullOrEmpty(personnelNumber) || role != "Student")
             {
-                TempData["Error"] = "Please log in as a student to book a tutor.";
+                //TempData["Error"] = "Please log in as a student to book a tutor.";
                 return RedirectToPage("/Authentication/LogIn");
             }
             

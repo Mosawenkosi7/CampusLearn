@@ -6,9 +6,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 //add the Repository here --------------------------------------
 builder.Services.AddScoped< CampusLearn.Repositories.TutorRepository>();
-builder.Services.AddScoped<CampusLearn.Repositories.BookTutorRepository>();
-
 builder.Services.AddScoped<CampusLearn.Repositories.StudentDashboardRepository>();
+builder.Services.AddScoped<CampusLearn.Repositories.BookTutorRepository>();
+builder.Services.AddScoped<CampusLearn.Repositories.AuthenticationRepository>();
+
 
 
 //-------------------------------end of adding the repository here
@@ -17,9 +18,9 @@ builder.Services.AddScoped<CampusLearn.Repositories.StudentDashboardRepository>(
 
 //add services Dependency Injection here----------------------------
 builder.Services.AddScoped< CampusLearn.Services.TutorService>();
-builder.Services.AddScoped<CampusLearn.Services.BookTutorService>();
-
 builder.Services.AddScoped<CampusLearn.Services.StudentDashboardService>();
+builder.Services.AddScoped<CampusLearn.Services.BookTutorService>();
+builder.Services.AddScoped<CampusLearn.Services.AuthenticationServices>();
 
 
 

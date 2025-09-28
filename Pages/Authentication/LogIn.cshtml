@@ -1,4 +1,40 @@
 ﻿@page
 @model CampusLearn.Pages.Authentication.LogInModel
 @{
+    ViewData["Title"] = "Student Login";
 }
+
+@* LogIn Styles *@
+<link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+
+<div class="login-container">
+        <h2>Welcome Back!</h2>
+        <form asp-action="Login" method="post">
+            <div class="form-group">
+                <label asp-for="Email">Email</label>
+                <input asp-for="Email" />
+                <span asp-validation-for="Email" class="validation-message"></span>
+            </div>
+
+        <div class="form-group">
+            <label asp-for="PersonnelNumber">Personnel Number*</label>
+            <input asp-for="PersonnelNumber" />
+            <span asp-validation-for="PersonnelNumber" class="validation-message"></span>
+        </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" />
+                <span asp-validation-for="Password" class="validation-message"></span>
+            </div>
+
+            <div asp-validation-summary="ModelOnly" class="validation-message"></div>
+
+            <button type="submit" class="Logbtn">Log in</button>
+        </form>
+        <div class="link-group">
+            <a href="\Authentication\ForgotPassword" class="link">Forgot password?</a>
+        <h6>Don't have an account? <a href="\Authentication\SignUp" class="link">Register</a></h6>
+        </div>
+    </div>
+

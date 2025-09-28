@@ -29,6 +29,7 @@
                         <li class="nav-item">
                         </li>
                         <li class="nav-item">
+                           
                             <a class="nav-link text-dark @(ViewContext.RouteData.Values["Page"]?.ToString() == "/Student/Dashboard" ? "active" : "")" asp-area="" asp-page="/Student/Dashboard">Dashboard</a>
                         </li>
                         <li class="nav-item">
@@ -39,14 +40,14 @@
                     </ul>
 
                     @{
-                        // just for testing inside the layout
-                        // Context.Session.SetString("role", null);
-                        //Context.Session.SetString("name", "Kele");
-                        // Testing as a student
-                        Context.Session.SetString("personnelNumber", "ST12345678");
-                        Context.Session.SetString("name", "John");
-                        Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
-                        Context.Session.SetString("role", "Student"); 
+                        
+                        // Context.Session.SetString("personnelNumber", "ST12345678");
+                        // Context.Session.SetString("name", "John Doe");
+                        // Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
+                        // Context.Session.SetString("role", "Student");
+                        
+
+
                     }
 
 
@@ -56,7 +57,7 @@
                         @if (Context.Session.GetString("role") == null)
                         {
                             <li class="nav-item">
-                                <a class="btn btn-primary me-3" href="/Authentication/SignUp">Sign In</a>
+                                <a class="btn btn-primary me-3" href="/Authentication/SignUp">Sign Up</a>
                             </li>
                             <li class="nav-item">
                                 <a class="btn btn-primary" href="/Authentication/LogIn">Log In</a>
