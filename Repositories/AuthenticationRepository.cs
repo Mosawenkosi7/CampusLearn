@@ -53,12 +53,11 @@ namespace CampusLearn.Repositories
         }
 
         //method that will add student registrations
-        public void AddNewUser(string personnelNumber, string email, string password, string firstName, string lastName, string phoneNumber)
+        public bool AddNewUser(string personnelNumber, string email, string password, string firstName, string lastName, string phoneNumber)
         {
             //connect to Database
             try
             {
-                
                 using (SqlConnection connectDB = new SqlConnection(_connectionString))
                 {
                     connectDB.Open();
@@ -82,8 +81,10 @@ namespace CampusLearn.Repositories
                         cmd.Parameters.AddWithValue("@LastName", lastName);
                         cmd.Parameters.AddWithValue("@PhoneNumber", phoneNumber);
 
-                      cmd.ExecuteNonQuery();
-                     
+                        int rowsAffected = cmd.ExecuteNonQuery();
+                        
+                        // Return true if at least one row was affected (successful insert)
+                        return rowsAffected > 0;
                     }
 
                 }
@@ -91,7 +92,11 @@ namespace CampusLearn.Repositories
             catch (Exception ex)
             {
                 // Log the full exception details for debugging
+                Console.WriteLine($"Error adding user: {ex.Message}");
                 Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                
+                // Re-throw the exception so the service layer knows it failed
+                throw;
             }
         }
     }

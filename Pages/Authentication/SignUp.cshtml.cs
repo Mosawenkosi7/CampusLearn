@@ -69,19 +69,26 @@ namespace CampusLearn.Pages.Authentication
                 return Page();
             }
 
-
-            bool addNewUser = _authService.AddNewUser(PersonnelNumber, Email, Password, FirstName, LastName, PhoneNumber);
-
-            if (addNewUser)
+            try
             {
-                SuccessMessage = "Profile has been created successfully!";
-                return RedirectToPage("/Authentication/LogIn");
-                
+                bool addNewUser = _authService.AddNewUser(PersonnelNumber, Email, Password, FirstName, LastName, PhoneNumber);
+
+                if (addNewUser)
+                {
+                    SuccessMessage = "Profile has been created successfully!";
+                    return RedirectToPage("/Authentication/LogIn");
+                }
+                else
+                {
+                    ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
+                    return Page(); // Stay on the same page to show error
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
-                return RedirectToPage("/Authentication/SignUp");
+                ErrorMessage = "An error occurred while creating your account. Please try again.";
+                Console.WriteLine($"SignUp error: {ex.Message}");
+                return Page(); // Stay on the same page to show error
             }
         }
     }

@@ -13,24 +13,30 @@ namespace CampusLearn.Services
        //method that will check if email or personnelNumber exist and then add user to database
        public bool AddNewUser(string personnelNumber, string email, string password, string firstName, string lastName, string phoneNumber)
         {
-           
-
-
-            //check if email exist in Db 
-            if (_authRepository.EmailExists(email))
+            try
             {
-                return false;  //this should exit the AddNewUser method
+                //check if email exist in Db 
+                if (_authRepository.EmailExists(email))
+                {
+                    return false;  //this should exit the AddNewUser method
+                }
+
+                //check if personnelNumber exist
+                if (_authRepository.PersonnelNumberExists(personnelNumber))
+                {
+                    return false;
+                }
+
+                //if the two if's dont execute, then add user 
+                bool success = _authRepository.AddNewUser(personnelNumber, email, password, firstName, lastName, phoneNumber);
+                return success;
             }
-
-            //check if personnelNumber exist
-            if (_authRepository.PersonnelNumberExists(personnelNumber))
+            catch (Exception ex)
             {
+                // Log the exception for debugging
+                Console.WriteLine($"Authentication service error: {ex.Message}");
                 return false;
             }
-
-            //if the two if's dont execute, then add user 
-            _authRepository.AddNewUser(personnelNumber, email, password, firstName, lastName, phoneNumber);
-            return true;
         }
     }
 
