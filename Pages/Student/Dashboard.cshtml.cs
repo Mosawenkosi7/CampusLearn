@@ -46,13 +46,12 @@ namespace CampusLearn.Pages.Student
         public int LearningResourcesCurrentPage { get; set; }
         public int LearningResourcesTotalPages { get; set; }
 
-        public void OnGet(int p = 1, int lr = 1)
+        public IActionResult OnGet(int p = 1, int lr = 1)
         {
             var studentId = HttpContext.Session.GetString("personnelNumber");
             if(string.IsNullOrEmpty(studentId))
             {
-                RedirectToPage("/Authentication/LogIn");
-                return; // Important: exit early if no student ID
+                return RedirectToPage("/Authentication/LogIn");
             }
 
             // all data ordered from service - studentId is guaranteed non-null here
@@ -94,6 +93,8 @@ namespace CampusLearn.Pages.Student
             completedSessions = _studentDashboardService.CompletedSessions(studentId);
 
             pendingSessions = _studentDashboardService.PendingSessionsCount(studentId);
+
+            return Page();
 
         }
 

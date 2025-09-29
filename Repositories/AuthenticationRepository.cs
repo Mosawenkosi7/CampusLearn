@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Data.SqlClient;
+using CampusLearn.Models;
 
 namespace CampusLearn.Repositories
 {
@@ -98,6 +99,92 @@ namespace CampusLearn.Repositories
                 // Re-throw the exception so the service layer knows it failed
                 throw;
             }
+        }
+
+        public bool ValidateUser(string email, string password)
+        {
+            //connect to Database
+            try
+            {
+                using (SqlConnection connectDB = new SqlConnection(_connectionString))
+                {
+                    connectDB.Open();
+
+                    //query to get user details from users table
+                    string getUserQuery = @"SELECT password FROM users WHERE email = @Email";
+
+                    using (SqlCommand cmd = new SqlCommand(getUserQuery, connectDB))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        var result = cmd.ExecuteScalar(); // Expecting a single value (the hashed password)
+                        if (result != null)
+                        {
+                            string storedHashedPassword = result.ToString() ?? "";
+                            var passwordHasher = new PasswordHasher<IdentityUser>();
+                            var verificationResult = passwordHasher.VerifyHashedPassword(new IdentityUser(), storedHashedPassword, password);
+
+                            // store the details using session data 
+                            return verificationResult == PasswordVerificationResult.Success;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception details for debugging
+                Console.WriteLine($"Error validating user: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+
+                // Re-throw the exception so the service layer knows it failed
+                throw;
+
+            }
+            return false;
+        }
+
+        //method to get user details by email 
+        public User GetUserByEmail(string email)
+        {
+            //User object to hold user details
+            User user = new User();
+
+            try
+            {
+                using (SqlConnection connectDB = new SqlConnection(_connectionString))
+                {
+                    connectDB.Open();
+
+                    //query to get user details from users table
+                    string getUserQuery = @"SELECT personnelNumber, email, firstName, role FROM users 
+                                            WHERE email = @Email";
+
+                    using (SqlCommand cmd = new SqlCommand(getUserQuery, connectDB))
+                    {
+                        cmd.Parameters.AddWithValue("@Email", email);
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                user.PersonnelNumber = reader.GetString(0);
+                                user.Email = reader.GetString(1);
+                                user.FirstName = reader.GetString(2);
+                                user.Role = reader.GetString(3);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the full exception details for debugging
+                Console.WriteLine($"Error retrieving user: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                // Re-throw the exception so the service layer knows it failed
+                throw;
+            }
+
+
+            return user;
         }
     }
 }

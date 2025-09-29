@@ -1,4 +1,5 @@
-﻿using CampusLearn.Repositories;
+﻿using CampusLearn.Models;
+using CampusLearn.Repositories;
 
 namespace CampusLearn.Services
 {
@@ -11,7 +12,7 @@ namespace CampusLearn.Services
         }
 
        //method that will check if email or personnelNumber exist and then add user to database
-       public bool AddNewUser(string personnelNumber, string email, string password, string firstName, string lastName, string phoneNumber)
+        public bool AddNewUser(string personnelNumber, string email, string password, string firstName, string lastName, string phoneNumber)
         {
             try
             {
@@ -27,18 +28,42 @@ namespace CampusLearn.Services
                     return false;
                 }
 
+                //check if email exist in Db 
+                if (_authRepository.PersonnelNumberExists(phoneNumber))
+                {
+                    return false;  //this should exit the AddNewUser method
+                }
+
+
+
                 //if the two if's dont execute, then add user 
                 bool success = _authRepository.AddNewUser(personnelNumber, email, password, firstName, lastName, phoneNumber);
                 return success;
             }
             catch (Exception ex)
             {
-                // Log the exception for debugging
-                Console.WriteLine($"Authentication service error: {ex.Message}");
+                Console.WriteLine(ex.Message);
                 return false;
+            }
+        }
+
+        //method to authenticate user login
+        public User? SignIn(string email, string password)
+        {
+            User user = new User();
+            //implement business rule to authenticate user
+            bool isAuthenticated = _authRepository.ValidateUser(email, password);
+           if(isAuthenticated)
+            {
+                user = _authRepository.GetUserByEmail(email);
+                return user;
+            }
+           else
+            {
+                return null;
             }
         }
     }
 
-   
+
 }

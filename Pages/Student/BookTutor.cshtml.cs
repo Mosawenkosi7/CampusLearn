@@ -59,11 +59,10 @@ namespace CampusLearn.Pages.Student
         
         public IActionResult OnGet(int availabilityId)
         {
-            // Check if user is logged in and is a student
+            // Check if user is logged in and Sis a student
             var personnelNumber = HttpContext.Session.GetString("personnelNumber");
-            var role = HttpContext.Session.GetString("role");
             
-            if (string.IsNullOrEmpty(personnelNumber) || role != "Student")
+            if (string.IsNullOrEmpty(personnelNumber))
             {
                 //TempData["Error"] = "Please log in as a student to book a tutor.";
                 return RedirectToPage("/Authentication/LogIn");

@@ -76,11 +76,17 @@ namespace CampusLearn.Pages.Authentication
                 if (addNewUser)
                 {
                     SuccessMessage = "Profile has been created successfully!";
-                    return RedirectToPage("/Authentication/LogIn");
+                    FirstName = "";
+                    LastName = "";
+                    PhoneNumber = "";
+                    PersonnelNumber = "";
+                    Email = "";
+                    ModelState.Clear();
+                    return Page();
                 }
                 else
                 {
-                    ErrorMessage = "Email or Personnel number already exists. Please use different credentials.";
+                    ErrorMessage = "An account with this email, personnel number, or cellphone already exists. Please use different credentials.";
                     return Page(); // Stay on the same page to show error
                 }
             }

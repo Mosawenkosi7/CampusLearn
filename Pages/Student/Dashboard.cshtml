@@ -48,10 +48,7 @@
                         <a class="nav-link" href="/Authentication/ManageAccount">Manage Account</a>
                     </li>
                 </ul>
-                <form class="d-flex mt-3" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
+               
             </div>
         </div>
     </div>
@@ -214,6 +211,14 @@
                 <p>@item.Subscription.ModuleCode</p>
                 <p>@item.LearningResource.Description</p>
                 <a href="/Student/TopicDiscussion?id=@item.LearningResource.ResourceId">View Resource</a>
+            </div>
+        }
+
+        @if (Model.learningResources.Count <=0)
+        {
+            <div>
+                <p>Hello👋, You have not subscribed to receive learning resources</p>
+                <a href="/Authentication/ManageAccount">Cick here to receive subscribe</a>
             </div>
         }
     </div>
