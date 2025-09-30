@@ -8,6 +8,7 @@ namespace CampusLearn.Pages.Tutor
     public class AllTutorsModel : PageModel
     {
         private readonly TutorService _tutorService;
+
         public AllTutorsModel(TutorService tutorService)
         {
             _tutorService = tutorService;
@@ -41,4 +42,3 @@ namespace CampusLearn.Pages.Tutor
         }
     }
 }
-
