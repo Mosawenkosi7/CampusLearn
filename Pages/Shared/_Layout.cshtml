@@ -39,16 +39,16 @@
                         </li>
                     </ul>
 
-                    @{
-                        
-                        // Context.Session.SetString("personnelNumber", "ST12345678");
-                        // Context.Session.SetString("name", "John Doe");
-                        // Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
-                        // Context.Session.SetString("role", "Student");
+                    @* @{
+
+                        Context.Session.SetString("personnelNumber", "845285421");
+                        Context.Session.SetString("name", "Kaizen");
+                        Context.Session.SetString("email", "john.student@belgiumcampus.ac.za");
+                        Context.Session.SetString("role", "Student");
                         
 
 
-                    }
+                    } *@
 
 
                     @* signing in and register buttons + drop down depending on role *@
@@ -72,7 +72,7 @@
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @Context.Session.GetString("firstName")
+                                    @Context.Session.GetString("name")
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Bookmarks</a></li>

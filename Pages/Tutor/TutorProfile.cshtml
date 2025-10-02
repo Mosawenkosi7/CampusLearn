@@ -177,7 +177,8 @@
                             <div class="col-4">
                                 @if (!string.IsNullOrEmpty(Model.Tutor.ProfilePicture))
                                 {
-                                    <img src="/Media/tutors/@Model.Tutor.ProfilePicture" alt="@Model.Tutor.FullName" class="profile-image">
+                                    @* <img src="/Media/tutors/@Model.Tutor.ProfilePicture" alt="@Model.Tutor.FullName" class="profile-image"> *@
+                                    <img src="@Model.Tutor.ProfilePicture" class="card-img-top" alt="@Model.Tutor.FullName" onerror="this.src='/Media/tutors/tutor1.jpg'">
                                 }
                                 else
                                 {

@@ -82,7 +82,7 @@ namespace CampusLearn.Pages.Authentication
                     PersonnelNumber = "";
                     Email = "";
                     ModelState.Clear();
-                    return Page();
+                    return RedirectToPage("/Authentication/LogIn");
                 }
                 else
                 {
