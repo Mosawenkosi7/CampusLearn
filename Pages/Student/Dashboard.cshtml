@@ -2,3 +2,261 @@
 @model CampusLearn.Pages.Student.DashboardModel
 @{
 }
+
+<link rel="stylesheet" href="~/css/StudentDashboard.css" asp-append-version="true" />
+
+<nav class="navbar bg-body-tertiary mt-4">
+    <div class="container-fluid">
+        <div class="w-100 d-flex align-items-center justify-content-center position-relative p-4">
+            <!-- Offcanvas button -->
+            <button class="navbar-toggler position-absolute start-0 ms-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Centered heading -->
+            <h1 class="position-absolute start-50 translate-middle-x m-0 text-center">Student Dashboard</h1>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">CampusLearn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                        <hr  style="border:2px solid blue"/>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Tutor/AllTutors">View Tutors</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Communication/Forum">Public Forum</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Communication/PrivateMessaging">Private Messages</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Communication/Notification">Notifications</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Authentication/ManageAccount">Manage Account</a>
+                    </li>
+                </ul>
+               
+            </div>
+        </div>
+    </div>
+</nav>
+
+@* message for canceling an appoinment  *@
+<div style="margin-top:30px">
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
+
+
+
+<div class="bookings-table">
+    <table class="table table-striped table-hover mt-5">
+
+        <thead>
+            <tr>
+                <th>Tutor Name</th>
+                <th>Module Code</th>
+                <th>Appointment Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.appointmentTables)
+            {
+                var modalId = $"cancelModal-{item.Booking.BookingId}";
+                <tr>
+                    <td>@item.User.FullName</td>
+                    <td>@item.TutorAvailability.ModuleCode</td>
+                    <td>@item.TutorAvailability.Available</td>
+                    <td>
+                        @{
+                            var status = item.Booking.Status?.ToLowerInvariant();
+                            var badge = status switch
+                            {
+                                "pending" => "warning",   // yellow
+                                "active" => "primary",    // blue
+                                "completed" => "success", // green
+                                "dropped" => "danger",  // red
+                                _ => "secondary"
+                            };
+                        }
+                        <span class="badge bg-@badge">@item.Booking.Status</span>
+                    </td>
+                    <td>
+                        <a href="/" class="btn btn-success">Visit</a>
+                        <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#@modalId">
+                            Cancel
+                        </a>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="@modalId" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5">Cancel @item.TutorAvailability.ModuleCode</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Are you sure you want to cancel this appointment?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <form method="post" asp-page-handler="CancelSession">
+
+                                            <input asp-for="Booking.Status" type="hidden" value="@item.Booking.Status" />
+                                            <input asp-for="Booking.BookingId" type="hidden" value="@item.Booking.BookingId" />
+                                            <button type="submit" class="btn btn-danger">Yes, Cancel</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+
+    <div class="pagination d-flex justify-content-center">
+        @if (Model.TotalPages > 1)
+        {
+            <nav aria-label="Appointments pagination">
+                <ul class="pagination">
+                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-page="/Student/Dashboard" asp-route-p="@(Model.CurrentPage - 1)">Previous</a>
+                    </li>
+                    @for (var i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                            <a class="page-link" asp-page="/Student/Dashboard" asp-route-p="@i">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-page="/Student/Dashboard" asp-route-p="@(Model.CurrentPage + 1)">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        }
+    </div>
+</div>
+
+<div class="bookings-summary">
+    <div style="border-right: 3px solid black; padding-right:35px">
+        <div class="d-flex  gap-3" >
+            <i class="bi bi-calendar4" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px"> @Model.totalSessions</h4>
+        </div>
+        <p>Booked Sessions</p>
+    </div>
+    <div style="border-right: 3px solid black; padding-right:35px">
+        <div class="d-flex  gap-3">
+            <i class="bi bi-clock" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px">@Model.totalUpcomingSessions </h4>
+        </div>
+        <p>Upcoming Sessions</p>
+    </div>
+    
+    <div style="border-right: 3px solid black; padding-right:35px;">
+        <div class="d-flex  gap-3">
+            <i class="bi bi-hourglass" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px">@Model.pendingSessions</h4>
+        </div>
+        <p>Pending Sessions</p>
+    </div>
+
+    <div>
+        <div class="d-flex  gap-3">
+            <i class="bi bi-check2-square" style="font-size:55px; font-weight:bolder"></i> <h4 style="font-size:40px">@Model.completedSessions</h4>
+        </div>
+        <p>Completed Sessions</p>
+    </div>
+</div>
+
+<div class="notifications">
+
+</div>
+
+<div class="learnig-resources">
+    <h2>Subscribed Topics</h2>
+     <div class="topics">
+        @foreach (var item in Model.learningResources)
+        {
+            <div>
+                <h3>@item.LearningResource.Topic</h3>
+                <p>@item.Subscription.ModuleCode</p>
+                <p>@item.LearningResource.Description</p>
+                <a href="/Student/TopicDiscussion?id=@item.LearningResource.ResourceId">View Resource</a>
+            </div>
+        }
+
+        @if (Model.learningResources.Count <=0)
+        {
+            <div>
+                <p>Hello👋, You have not subscribed to receive learning resources</p>
+                <a href="/Authentication/ManageAccount">Cick here to receive subscribe</a>
+            </div>
+        }
+    </div>
+
+    @* Learning Resources Pagination *@
+    @if (Model.LearningResourcesTotalPages > 1)
+    {
+        <div class="pagination-numbers" style="text-align: center; margin-top: 20px;">
+            @for (int i = 1; i <= Model.LearningResourcesTotalPages; i++)
+            {
+                if (i == Model.LearningResourcesCurrentPage)
+                {
+                    <span class="page-number current" style="
+                        display: inline-block;
+                        padding: 8px 12px;
+                        margin: 0 4px;
+                        background-color: #007bff;
+                        color: white;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        font-weight: bold;
+                    ">@i</span>
+                }
+                else
+                {
+                    <a href="/Student/Dashboard?p=@Model.CurrentPage&lr=@i" class="page-number" style="
+                        display: inline-block;
+                        padding: 8px 12px;
+                        margin: 0 4px;
+                        background-color: #f8f9fa;
+                        color: #007bff;
+                        border: 1px solid #dee2e6;
+                        border-radius: 4px;
+                        text-decoration: none;
+                        transition: all 0.2s;
+                    ">@i</a>
+                }
+            }
+        </div>
+    }
+</div>

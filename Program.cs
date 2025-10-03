@@ -1,3 +1,5 @@
+using CampusLearn.Utility;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //connection string to the database
@@ -6,6 +8,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 //add the Repository here --------------------------------------
 builder.Services.AddScoped< CampusLearn.Repositories.TutorRepository>();
+builder.Services.AddScoped<CampusLearn.Repositories.StudentDashboardRepository>();
+builder.Services.AddScoped<CampusLearn.Repositories.BookTutorRepository>();
+builder.Services.AddScoped<CampusLearn.Repositories.AuthenticationRepository>();
 
 
 
@@ -13,18 +18,17 @@ builder.Services.AddScoped< CampusLearn.Repositories.TutorRepository>();
 
 
 
-
-
 //add services Dependency Injection here----------------------------
 builder.Services.AddScoped< CampusLearn.Services.TutorService>();
-
-
-
-
+builder.Services.AddScoped<CampusLearn.Services.StudentDashboardService>();
+builder.Services.AddScoped<CampusLearn.Services.BookTutorService>();
+builder.Services.AddScoped<CampusLearn.Services.AuthenticationServices>();
 
 
 
 //-------------------------------end of adding services Dependency Injection here
+
+
 
 
 //External dependency injection
@@ -32,7 +36,7 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.IdleTimeout = TimeSpan.FromHours(2);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -43,7 +47,11 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddScoped<SaveMediaUtility>();
+
 var app = builder.Build();
+
+
 
 app.UseSession();
 // Configure the HTTP request pipeline.

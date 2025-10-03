@@ -1,12 +1,178 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using CampusLearn.Services;
+using CampusLearn.Models;
+using System.IO;
+using System.Threading.Tasks;
+using CampusLearn.Utility;
 
 namespace CampusLearn.Pages.Student
 {
     public class BookTutorModel : PageModel
     {
-        public void OnGet()
+        private readonly TutorService _tutorService;
+        private readonly BookTutorService _bookTutorService;
+        private readonly SaveMediaUtility _saveMediaUtility;
+        
+        [BindProperty]
+        public int AvailabilityId { get; set; }
+        
+        [BindProperty]
+        public TutorAvailabilityView? Availability { get; set; }
+        
+        [BindProperty]
+        public string StudentName { get; set; } = "";
+        
+        [BindProperty]
+        public string StudentEmail { get; set; } = "";
+        
+        [BindProperty]
+        public string Module { get; set; } = "";
+        
+        [BindProperty]
+        public DateTime PreferredDate { get; set; }
+        
+        [BindProperty]
+        public TimeSpan PreferredTime { get; set; }
+        
+        [BindProperty]
+        public string SessionDuration { get; set; } = "";
+        
+        [BindProperty]
+        public string Location { get; set; } = "";
+        
+        [BindProperty]
+        public string BookingSummary { get; set; } = "";
+        
+        [BindProperty]
+        public IFormFile? StudentResource1 { get; set; }
+        
+        [BindProperty]
+        public IFormFile? StudentResource2 { get; set; }
+        
+        [BindProperty]
+        public bool AgreeTerms { get; set; }
+        
+        public BookTutorModel(TutorService tutorService, BookTutorService bookTutorService, SaveMediaUtility saveMediaUtility)
         {
+            _tutorService = tutorService;
+            _bookTutorService = bookTutorService;
+            _saveMediaUtility = saveMediaUtility;
         }
+
+        
+
+        public IActionResult OnGet(int availabilityId)
+        {
+            // Check if user is logged in and Sis a student
+            var personnelNumber = HttpContext.Session.GetString("personnelNumber");
+
+            if (string.IsNullOrEmpty(personnelNumber))
+            {
+                //TempData["Error"] = "Please log in as a student to book a tutor.";
+                return RedirectToPage("/Authentication/LogIn");
+            }
+            
+            AvailabilityId = availabilityId;
+            
+            // Get availability details
+            Availability = _tutorService.GetAvailabilityById(availabilityId);
+            
+            if (Availability == null)
+            {
+                TempData["Error"] = "The selected availability slot is no longer available.";
+                return RedirectToPage("/Tutor/AllTutors");
+            }
+            
+            if (Availability.IsBooked)
+            {
+                TempData["Error"] = "This time slot has already been booked.";
+                return RedirectToPage("/Tutor/AllTutors");
+            }
+            
+            // Get student information
+            var student = _bookTutorService.GetStudentByPersonnelNumber(personnelNumber);
+            if (student != null)
+            {
+                StudentName = $"{student.FirstName} {student.LastName}";
+                StudentEmail = student.Email;
+            }
+            
+            // Pre-populate form fields from availability
+            Module = Availability.ModuleCode;
+            PreferredDate = Availability.Available.Date; // Extract date from DATETIME
+            PreferredTime = Availability.Available.TimeOfDay; // Extract time from DATETIME
+            
+            return Page();
+        }
+        
+        public async Task<IActionResult> OnPost()
+        {
+            // Get logged-in student's personnel number
+            var personnelNumber = HttpContext.Session.GetString("personnelNumber");
+
+            if (string.IsNullOrEmpty(personnelNumber))
+            {
+                TempData["Error"] = "Please log in to complete the booking.";
+                return RedirectToPage("/Authentication/LogIn");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            
+            if (!AgreeTerms)
+            {
+                TempData["Error"] = "You must agree to the terms and conditions.";
+                return Page();
+            }
+            
+            try
+            {
+                // Handle file uploads
+                string? document1 = null;
+                string? document2 = null;
+                
+                if (StudentResource1 != null && StudentResource1.Length > 0)
+                {
+                    document1 = await _saveMediaUtility.SaveAsync(StudentResource1, "BookTutorResources");
+                }
+
+                if (StudentResource2 != null && StudentResource2.Length > 0)
+                {
+                    document2 = await _saveMediaUtility.SaveAsync(StudentResource2, "BookTutorResources");
+                }
+                // Create booking
+                bool success = _bookTutorService.CreateBooking(
+                AvailabilityId, 
+                personnelNumber, 
+                Location, 
+                BookingSummary, 
+                document1, 
+                document2
+                );
+                
+                if (success)
+                {
+                    TempData["Message"] = "Booking created successfully!";
+                    // Stay on the same page to show the success message
+                    return RedirectToPage("/Student/Dashboard");
+                }
+                else
+                {
+                    TempData["Error"] = "Failed to create booking. The time slot may no longer be available.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "An error occurred while creating the booking. Please try again.";
+                // Log the exception for debugging
+                Console.WriteLine($"Booking error: {ex.Message}");
+            }
+            
+            return Page();
+        }
+
     }
 }
