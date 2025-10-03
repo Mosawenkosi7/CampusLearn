@@ -63,10 +63,10 @@ namespace CampusLearn.Services
         /// </summary>
         /// <param name="availabilityId">The availability slot ID</param>
         /// <returns>True if booking successful</returns>
-        public bool BookAvailability(int availabilityId)
-        {
-            return _tutorRepository.BookAvailability(availabilityId);
-        }
+        //public bool BookAvailability(int availabilityId)
+        //{
+        //    return _tutorRepository.BookAvailability(availabilityId);
+        //}
         public PagedResult<TutorCard> GetTutors(TutorQuery query)
         {
             return _tutorRepository.GetTutors(query);

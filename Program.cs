@@ -1,3 +1,5 @@
+using CampusLearn.Utility;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //connection string to the database
@@ -24,10 +26,9 @@ builder.Services.AddScoped<CampusLearn.Services.AuthenticationServices>();
 
 
 
-
-
-
 //-------------------------------end of adding services Dependency Injection here
+
+
 
 
 //External dependency injection
@@ -46,7 +47,11 @@ builder.Services.AddSession(options =>
 // Add services to the container.
 builder.Services.AddRazorPages();
 
+builder.Services.AddScoped<SaveMediaUtility>();
+
 var app = builder.Build();
+
+
 
 app.UseSession();
 // Configure the HTTP request pipeline.

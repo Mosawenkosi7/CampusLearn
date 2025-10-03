@@ -4,6 +4,7 @@ using CampusLearn.Services;
 using CampusLearn.Models;
 using System.IO;
 using System.Threading.Tasks;
+using CampusLearn.Utility;
 
 namespace CampusLearn.Pages.Student
 {
@@ -11,6 +12,7 @@ namespace CampusLearn.Pages.Student
     {
         private readonly TutorService _tutorService;
         private readonly BookTutorService _bookTutorService;
+        private readonly SaveMediaUtility _saveMediaUtility;
         
         [BindProperty]
         public int AvailabilityId { get; set; }
@@ -51,17 +53,20 @@ namespace CampusLearn.Pages.Student
         [BindProperty]
         public bool AgreeTerms { get; set; }
         
-        public BookTutorModel(TutorService tutorService, BookTutorService bookTutorService)
+        public BookTutorModel(TutorService tutorService, BookTutorService bookTutorService, SaveMediaUtility saveMediaUtility)
         {
             _tutorService = tutorService;
             _bookTutorService = bookTutorService;
+            _saveMediaUtility = saveMediaUtility;
         }
+
         
+
         public IActionResult OnGet(int availabilityId)
         {
             // Check if user is logged in and Sis a student
             var personnelNumber = HttpContext.Session.GetString("personnelNumber");
-            
+
             if (string.IsNullOrEmpty(personnelNumber))
             {
                 //TempData["Error"] = "Please log in as a student to book a tutor.";
@@ -103,6 +108,15 @@ namespace CampusLearn.Pages.Student
         
         public async Task<IActionResult> OnPost()
         {
+            // Get logged-in student's personnel number
+            var personnelNumber = HttpContext.Session.GetString("personnelNumber");
+
+            if (string.IsNullOrEmpty(personnelNumber))
+            {
+                TempData["Error"] = "Please log in to complete the booking.";
+                return RedirectToPage("/Authentication/LogIn");
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -114,15 +128,6 @@ namespace CampusLearn.Pages.Student
                 return Page();
             }
             
-            // Get logged-in student's personnel number
-            var personnelNumber = HttpContext.Session.GetString("personnelNumber");
-            
-            if (string.IsNullOrEmpty(personnelNumber))
-            {
-                TempData["Error"] = "Please log in to complete the booking.";
-                return RedirectToPage("/Authentication/LogIn");
-            }
-            
             try
             {
                 // Handle file uploads
@@ -131,29 +136,28 @@ namespace CampusLearn.Pages.Student
                 
                 if (StudentResource1 != null && StudentResource1.Length > 0)
                 {
-                    document1 = await SaveUploadedFile(StudentResource1);
+                    document1 = await _saveMediaUtility.SaveAsync(StudentResource1, "BookTutorResources");
                 }
-                
+
                 if (StudentResource2 != null && StudentResource2.Length > 0)
                 {
-                    document2 = await SaveUploadedFile(StudentResource2);
+                    document2 = await _saveMediaUtility.SaveAsync(StudentResource2, "BookTutorResources");
                 }
-                
                 // Create booking
                 bool success = _bookTutorService.CreateBooking(
-                    AvailabilityId, 
-                    personnelNumber, 
-                    Location, 
-                    BookingSummary, 
-                    document1, 
-                    document2
+                AvailabilityId, 
+                personnelNumber, 
+                Location, 
+                BookingSummary, 
+                document1, 
+                document2
                 );
                 
                 if (success)
                 {
                     TempData["Message"] = "Booking created successfully!";
                     // Stay on the same page to show the success message
-                    return Page();
+                    return RedirectToPage("/Student/Dashboard");
                 }
                 else
                 {
@@ -169,29 +173,6 @@ namespace CampusLearn.Pages.Student
             
             return Page();
         }
-        
-        private async Task<string?> SaveUploadedFile(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-                return null;
-            
-            // Create uploads directory if it doesn't exist
-            var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Media", "BookTutorResources");
-            if (!Directory.Exists(uploadsPath))
-            {
-                Directory.CreateDirectory(uploadsPath);
-            }
-            
-            // Generate unique filename
-            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-            var filePath = Path.Combine(uploadsPath, fileName);
-            
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-            
-            return fileName;
-        }
+
     }
 }

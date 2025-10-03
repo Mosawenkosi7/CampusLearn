@@ -48,8 +48,8 @@ namespace CampusLearn.Repositories
                     
                     // Create booking record
                     string insertQuery = @"
-                        INSERT INTO booking (studentNumber, tutorAvailabilityId, location, bookingSummary, document1, document2, dateBooked, status)
-                        VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE(), 'Pending')";
+                        INSERT INTO booking (studentNumber, tutorAvailabilityId, location, bookingSummary, document1, document2, dateBooked)
+                        VALUES (@studentNumber, @availabilityId, @location, @bookingSummary, @document1, @document2, GETDATE())";
                     
                     using (SqlCommand insertCommand = new SqlCommand(insertQuery, connectDB))
                     {
@@ -59,7 +59,7 @@ namespace CampusLearn.Repositories
                         insertCommand.Parameters.AddWithValue("@bookingSummary", bookingSummary);
                         insertCommand.Parameters.AddWithValue("@document1", document1 ?? (object)DBNull.Value);
                         insertCommand.Parameters.AddWithValue("@document2", document2 ?? (object)DBNull.Value);
-                        
+
                         int rowsAffected = insertCommand.ExecuteNonQuery();
                         
                         bool success = rowsAffected > 0;

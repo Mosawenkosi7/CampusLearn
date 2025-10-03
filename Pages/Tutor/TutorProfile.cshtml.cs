@@ -34,19 +34,19 @@ namespace CampusLearn.Pages.Tutor
             return Page();
         }
 
-        public IActionResult OnPostBook(int availabilityId, int tutorId)
-        {
-            var success = _tutorService.BookAvailability(availabilityId);
-            if (success)
-            {
-                TempData["Message"] = "Session booked successfully!";
-            }
-            else
-            {
-                TempData["Error"] = "Failed to book session. It may already be booked.";
-            }
+        //public IActionResult OnPostBook(int availabilityId, int tutorId)
+        //{
+        //    var success = _tutorService.BookAvailability(availabilityId);
+        //    if (success)
+        //    {
+        //        TempData["Message"] = "Session booked successfully!";
+        //    }
+        //    else
+        //    {
+        //        TempData["Error"] = "Failed to book session. It may already be booked.";
+        //    }
 
-            return RedirectToPage(new { id = tutorId });
-        }
+        //    return RedirectToPage(new { id = tutorId });
+        //}
     }
 }
